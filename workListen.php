@@ -183,7 +183,7 @@
                 height: '640',           // 播放器高度 (px)
                 playerVars: {
                     autoplay: 1,            // 自動播放影片
-                    controls: 1,            // 顯示播放器
+                    controls: (admin=='admin')? 1:0,            // 顯示播放器
                     showinfo: 0,            // 隱藏影片標題
                     modestbranding: 0,      // 隱藏YouTube Logo
                     loop: 0,                // 重覆播放
@@ -217,7 +217,7 @@
             startSeconds = 0
         } else {
             var timestamp_now = Date.parse(new Date())/1000;
-            startSeconds = timestamp_now - timestamp - 1;
+            startSeconds = timestamp_now - timestamp;
         }
 
         player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
