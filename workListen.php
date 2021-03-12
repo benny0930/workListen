@@ -183,7 +183,7 @@
                 height: '640',           // 播放器高度 (px)
                 playerVars: {
                     autoplay: 1,            // 自動播放影片
-                    controls: (admin == 'admin') ? 1 : 0,            // 顯示播放器
+                    controls: 1,            // 顯示播放器
                     showinfo: 0,            // 隱藏影片標題
                     modestbranding: 0,      // 隱藏YouTube Logo
                     loop: 0,                // 重覆播放
