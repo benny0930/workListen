@@ -249,6 +249,7 @@
     }
 
     function end() {
+        console.log('End workListenAction');
         $.ajax({
             type: 'GET',
             async: false,
