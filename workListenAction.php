@@ -38,11 +38,6 @@ else if ($type == "interstitial") {
     $aDate = json_decode($str, true);
     $length = count($aDate);
     $aNewDate = [];
-    $aNewDate[] = [
-        'id' => $id,
-        'title' => $title,
-        'timestamp'=>'',
-    ];
     foreach ($aDate as $key => $oDate){
         if ($key == 1) {
             $aNewDate[] = [
