@@ -21,7 +21,8 @@ if ($type == "read") {
     $length = count($aDate);
     $aDate[$length] = [
         'id' => $id,
-        'title' => $title
+        'title' => $title,
+        'timestamp'=>'',
     ];
     $sDate = json_encode($aDate);
     $fp = fopen($file_path, "w+"); //w是寫入模式,檔案不存在則建立檔案寫入。
@@ -30,17 +31,25 @@ if ($type == "read") {
     echo $sDate;
 } else if ($type == "end") {
     $id = $_GET['id'];
-    $admin = $_GET['admin'];
+    $admin = empty($_GET['admin'])? "":$_GET['admin'];
     $broadcast = 'broadcast.txt';
     $str = file_get_contents($broadcast);
     $aDate = json_decode($str, true);
     $saveDate = Null;
     $aNewDate = [];
+    echo $admin;
     if($admin=="admin"){
         foreach ($aDate as $key => $oDate) {
+            echo gettype($key);
+            echo $key;
             if ($key > 0) {
+                if ($key == 1) {
+                    $oDate['timestamp'] =  strtotime("now");
+                }
                 $aNewDate[] = $oDate;
-            } else {
+            }
+            else {
+                echo '2222';
                 $saveDate = $oDate;
             }
         }

@@ -126,7 +126,11 @@
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    <?php
+    echo 'var admin="' . (empty($_GET['admin']) ? 'user' : $_GET['admin']) . '";';
+    ?>
     var videoId = '';
+    var timestamp = '';
     var player;
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api"; // Take the API address.
@@ -139,9 +143,9 @@
         $("#broadcast").html("");
         var oBroadcast = JSON.parse(sBroadcast);
         for (const [key, value] of Object.entries(oBroadcast)) {
-            console.log(value);
             if (videoId === '') {
                 videoId = value.id;
+                timestamp = value.timestamp;
                 $("#player_title").html(value.title);
             }
             var title2 = value.title;
@@ -155,15 +159,12 @@
     function setHistory(sHistory) {
         console.log('設定歷史紀錄');
         $("#history").html("");
-        console.log(sHistory);
         var oHistory = JSON.parse(sHistory);
-        console.log(Object.keys(oHistory).length);
         var index = Math.floor(Math.random() * Object.keys(oHistory).length);
         for (const [key, value] of Object.entries(oHistory)) {
-            console.log(value);
-            console.log([videoId,key,index]);
             if (videoId === '' && parseInt(key) === index) {
                 videoId = value.id;
+                timestamp = value.timestamp;
                 $("#player_title").html(value.title);
             }
             var title1 = value.title;
@@ -182,7 +183,7 @@
                 height: '640',           // 播放器高度 (px)
                 playerVars: {
                     autoplay: 1,            // 自動播放影片
-                    controls: 0,            // 顯示播放器
+                    controls: 1,            // 顯示播放器
                     showinfo: 0,            // 隱藏影片標題
                     modestbranding: 0,      // 隱藏YouTube Logo
                     loop: 0,                // 重覆播放
@@ -191,6 +192,8 @@
                     cc_load_policty: 0,     // 隱藏字幕
                     iv_load_policy: 3,      // 隱藏影片註解
                     // autohide: 0             // 影片播放時，隱藏影片控制列
+                    start: 60,
+                    end: 999999,
                 },
                 events: {
                     onReady: onPlayerReady,
@@ -210,27 +213,33 @@
         $("#player_title").html(e.target.getVideoData().title);
         e.target.mute();      //播放時靜音
         e.target.playVideo();
+        if (timestamp === '') {
+            startSeconds = 0
+        } else {
+            var timestamp_now = Date.parse(new Date())/1000;
+            startSeconds = timestamp_now - timestamp - 1;
+        }
+
+        player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
     }
 
     function onPlayerStateChange(event) {
         console.log('onPlayerStateChange = ' + event.data);
         if (event.data == YT.PlayerState.ENDED) {
             console.log("結束");
+            console.log(admin);
             $.ajax({
                 type: 'GET',
                 async: false,
-                url: './workListenAction.php?type=end&id=' + videoId,
+                url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
                 success: function (rp) {
                     videoId = "";
                     var oList = JSON.parse(rp);
                     setBroadcast(oList[0]);
                     setHistory(oList[1]);
-                    player.loadVideoById(videoId)
-
+                    player.loadVideoById({videoId: videoId});
                 }
             });
-
-
         } else if (event.data == YT.PlayerState.PAUSED) {
             console.log("暫停");
         } else if (event.data == YT.PlayerState.PLAYING) {
@@ -263,7 +272,6 @@
                 break;
             }
         }
-        console.log("id=" + id);
         var title = getVideoInfo(id);
         $.ajax({
             type: 'GET',
@@ -314,6 +322,7 @@
         return title;
     }
 
+
     console.log('讀取播放清單');
     var sBroadcast = getNewDate("broadcast.txt");
     setBroadcast(sBroadcast);
@@ -322,6 +331,8 @@
     setHistory(sHistory);
     videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
     console.log('videoId = ' + videoId);
+
+
 </script>
 </body>
 </html>
