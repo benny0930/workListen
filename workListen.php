@@ -217,7 +217,7 @@
             startSeconds = 0
         } else {
             var timestamp_now = Date.parse(new Date()) / 1000;
-            startSeconds = timestamp_now - timestamp + 1;
+            startSeconds = timestamp_now - timestamp;
         }
 
         player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
