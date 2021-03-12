@@ -65,7 +65,7 @@ if ($type == "read") {
     $aDate2 = json_decode($str, true);
     if($admin=="admin"){
         $aDate2[] = $saveDate;
-        if (count($aDate2) > 5) {
+        if (count($aDate2) > 50) {
             array_splice($aDate2,0,1);
         }
     }
