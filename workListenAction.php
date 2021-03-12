@@ -29,7 +29,30 @@ if ($type == "read") {
     fwrite($fp, $sDate);
     fclose($fp);
     echo $sDate;
-} else if ($type == "end") {
+}
+else if ($type == "interstitial") {
+    $id = $_GET['id'];
+    $title = $_GET['title'];
+    $file_path = $_GET['filename'];
+    $str = file_get_contents($file_path);
+    $aDate = json_decode($str, true);
+    $length = count($aDate);
+    $aNewDate = [];
+    $aNewDate[] = [
+        'id' => $id,
+        'title' => $title,
+        'timestamp'=>'',
+    ];
+    foreach ($aDate as $oDate){
+        $aNewDate[] = $oDate;
+    }
+    $sDate = json_encode($aNewDate);
+    $fp = fopen($file_path, "w+"); //w是寫入模式,檔案不存在則建立檔案寫入。
+    fwrite($fp, $sDate);
+    fclose($fp);
+    echo $sDate;
+}
+else if ($type == "end") {
     $id = $_GET['id'];
     $admin = empty($_GET['admin'])? "":$_GET['admin'];
     $broadcast = 'broadcast.txt';

@@ -104,7 +104,7 @@
                         <input type="text" class="form-control" id="youtube_url" placeholder="Youtube 網址"/>
                         <span class="input-group-append">
                           <button class="btn btn-info" type="button" onclick="add()">點播</button>
-                            <!--                          <button class="btn btn-warning" type="button" onclick="interstitial()">插播</button>-->
+                          <button class="btn btn-warning" type="button" onclick="interstitial()">插播</button>
                         </span>
                     </div>
                 </div>
@@ -304,7 +304,28 @@
 
     function interstitial() {
         console.log('插播');
-        onPlayerStateChange();
+        var url = $("#youtube_url").val();
+        $("#youtube_url").val("");
+        var aUrl = url.split('?');
+        var aUrlOne = aUrl[1].split('&');
+        var id = '';
+        for (var i = 0; i < aUrlOne.length; i++) {
+            var aUrlOneOne = aUrlOne[i].split('=');
+            if (aUrlOneOne[0] === "v") {
+                id = aUrlOneOne[1];
+                break;
+            }
+        }
+        var title = getVideoInfo(id);
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: './workListenAction.php?type=interstitial&filename=broadcast.txt&id=' + id + '&title=' + title,
+            success: function (rp) {
+                // console.log(rp)
+                setBroadcast(rp);
+            }
+        });
     }
 
     function getVideoInfo(videoId) {
