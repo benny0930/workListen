@@ -74,8 +74,8 @@
         <div class="col-md-8">
             <!-- 待播清單 -->
             <div class="card mb-4">
+                <h5 class="card-header">待播清單</h5>
                 <div class="card-body">
-                    <h2 class="card-title">待播清單</h2>
                     <p class="card-text">若清單為空會從近100歷史紀錄隨機則一</p>
                     <ul class="list-group list-group-flush" id="broadcast">
                         <!--                        <li class="list-group-item">Cras justo odio</li>-->
@@ -85,8 +85,8 @@
 
             <!-- 歷史紀錄 -->
             <div class="card mb-4">
+                <h5 class="card-header">歷史紀錄</h5>
                 <div class="card-body">
-                    <h2 class="card-title">歷史紀錄</h2>
                     <ul class="list-group list-group-flush" id="history">
                         <!--                        <li class="list-group-item">Cras justo odio</li>-->
                     </ul>
@@ -97,17 +97,32 @@
         <div class="col-md-4">
 
             <!-- Search Widget -->
-            <div class="card my-4">
+            <div class="card mb-4">
                 <h5 class="card-header">點播歌曲</h5>
                 <div class="card-body">
                     <div class="input-group">
                         <input type="text" class="form-control" id="youtube_url" placeholder="Youtube 網址"/>
                         <span class="input-group-append">
-                          <button class="btn btn-info" type="button" onclick="add()">點播</button>
-                          <button class="btn btn-warning" type="button" onclick="interstitial()">插播</button>
+                          <button class="btn btn-info" type="button" onclick="add('','')">點播</button>
+                          <button class="btn btn-warning" type="button" onclick="interstitial('','')">插播</button>
                         </span>
                     </div>
                 </div>
+            </div>
+            <div class="card mb-4">
+                <h5 class="card-header">搜尋歌曲</h5>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字" value="孫雪寧"/>
+                        <span class="input-group-append">
+                          <button class="btn btn-info" type="button" onclick="search()">搜尋</button>
+                        </span>
+                        <hr/>
+
+                    </div>
+
+                </div>
+                <div id="youtube_search_div" style="height: 500px;overflow: auto;"></div>
             </div>
         </div>
     </div>
@@ -148,6 +163,7 @@
                 timestamp = value.timestamp;
                 $("#player_title").html(value.title);
             }
+            console.log(value);
             var title2 = value.title;
             if (title2.length > 43) {
                 title2 = title2.slice(0, 40) + '...';
@@ -262,6 +278,7 @@
             }
         });
     }
+
     function loadVideoById() {
         if (timestamp === '') {
             startSeconds = 0
@@ -277,21 +294,24 @@
         player.stopVideo();
     }
 
-    function add() {
+    function add(id, title) {
         console.log('點播');
-        var url = $("#youtube_url").val();
-        $("#youtube_url").val("");
-        var aUrl = url.split('?');
-        var aUrlOne = aUrl[1].split('&');
-        var id = '';
-        for (var i = 0; i < aUrlOne.length; i++) {
-            var aUrlOneOne = aUrlOne[i].split('=');
-            if (aUrlOneOne[0] === "v") {
-                id = aUrlOneOne[1];
-                break;
+        if (id === "") {
+            var url = $("#youtube_url").val();
+            $("#youtube_url").val("");
+            var aUrl = url.split('?');
+            var aUrlOne = aUrl[1].split('&');
+            var id = '';
+            for (var i = 0; i < aUrlOne.length; i++) {
+                var aUrlOneOne = aUrlOne[i].split('=');
+                if (aUrlOneOne[0] === "v") {
+                    id = aUrlOneOne[1];
+                    break;
+                }
             }
+            title = getVideoInfo(id);
         }
-        var title = getVideoInfo(id);
+
         $.ajax({
             type: 'GET',
             async: false,
@@ -305,21 +325,24 @@
 
     }
 
-    function interstitial() {
+    function interstitial(id, title) {
         console.log('插播');
-        var url = $("#youtube_url").val();
-        $("#youtube_url").val("");
-        var aUrl = url.split('?');
-        var aUrlOne = aUrl[1].split('&');
-        var id = '';
-        for (var i = 0; i < aUrlOne.length; i++) {
-            var aUrlOneOne = aUrlOne[i].split('=');
-            if (aUrlOneOne[0] === "v") {
-                id = aUrlOneOne[1];
-                break;
+        if (id === "") {
+            var url = $("#youtube_url").val();
+            $("#youtube_url").val("");
+            var aUrl = url.split('?');
+            var aUrlOne = aUrl[1].split('&');
+            var id = '';
+            for (var i = 0; i < aUrlOne.length; i++) {
+                var aUrlOneOne = aUrlOne[i].split('=');
+                if (aUrlOneOne[0] === "v") {
+                    id = aUrlOneOne[1];
+                    break;
+                }
             }
+            title = getVideoInfo(id);
         }
-        var title = getVideoInfo(id);
+
         $.ajax({
             type: 'GET',
             async: false,
@@ -360,6 +383,43 @@
             }
         });
         return title;
+    }
+
+    function search() {
+        console.log('搜尋');
+        var youtube_keyword = $("#youtube_keyword").val();
+        $("#youtube_keyword").val("");
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=10',
+            success: function (rp) {
+                $("#youtube_search_div").html("");
+                console.log(rp);
+                /*
+                <div class="card-body">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">1111</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+                 */
+                for (var i = 0; i < rp.items.length; i++) {
+                    var thisOne = rp.items[i];
+                    console.log();
+                    var img = $("<img class=\"card-img-top\" src=\"" + thisOne.snippet.thumbnails.high.url + "\" alt=\"Card image cap\">");
+                    var body = $("<div class=\"card-body\"><div>").append("<p class=\"card-text\">" + thisOne.snippet.title + "</p>");
+                    body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
+                    body.append("<button class=\"btn btn-warning\" type=\"button\" onclick=\"interstitial('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">插播</button>");
+                    var div = $("<div class=\"card-body\"><div class=\"card\" style=\"width: 18rem;\"><div><div>").append(img).append(body)
+                    $("#youtube_search_div").append(div);
+                }
+            }
+        });
     }
 
 
