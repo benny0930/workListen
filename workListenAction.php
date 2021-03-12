@@ -37,11 +37,8 @@ if ($type == "read") {
     $aDate = json_decode($str, true);
     $saveDate = Null;
     $aNewDate = [];
-    echo $admin;
     if($admin=="admin"){
         foreach ($aDate as $key => $oDate) {
-            echo gettype($key);
-            echo $key;
             if ($key > 0) {
                 if ($key == 1) {
                     $oDate['timestamp'] =  strtotime("now");
@@ -49,7 +46,6 @@ if ($type == "read") {
                 $aNewDate[] = $oDate;
             }
             else {
-                echo '2222';
                 $saveDate = $oDate;
             }
         }
