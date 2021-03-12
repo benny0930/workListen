@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>辦公室聽音樂</title>
+    <title>辦公室點歌系統</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -23,7 +23,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">辦公室聽音樂</a>
+        <a class="navbar-brand" href="#">辦公室點歌系統</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -183,7 +183,7 @@
                 height: '640',           // 播放器高度 (px)
                 playerVars: {
                     autoplay: 1,            // 自動播放影片
-                    controls: (admin=='admin')? 1:0,            // 顯示播放器
+                    controls: (admin == 'admin') ? 1 : 0,            // 顯示播放器
                     showinfo: 0,            // 隱藏影片標題
                     modestbranding: 0,      // 隱藏YouTube Logo
                     loop: 0,                // 重覆播放
@@ -216,7 +216,7 @@
         if (timestamp === '') {
             startSeconds = 0
         } else {
-            var timestamp_now = Date.parse(new Date())/1000;
+            var timestamp_now = Date.parse(new Date()) / 1000;
             startSeconds = timestamp_now - timestamp + 1;
         }
 
@@ -228,18 +228,13 @@
         if (event.data == YT.PlayerState.ENDED) {
             console.log("結束");
             console.log(admin);
-            $.ajax({
-                type: 'GET',
-                async: false,
-                url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
-                success: function (rp) {
-                    videoId = "";
-                    var oList = JSON.parse(rp);
-                    setBroadcast(oList[0]);
-                    setHistory(oList[1]);
-                    player.loadVideoById({videoId: videoId});
-                }
-            });
+            if (admin === "admin") {
+                end();
+            } else {
+                setTimeout(end, 3000);
+            }
+
+
         } else if (event.data == YT.PlayerState.PAUSED) {
             console.log("暫停");
         } else if (event.data == YT.PlayerState.PLAYING) {
@@ -251,6 +246,21 @@
         } else {
             console.log("未知狀態");
         }
+    }
+
+    function end() {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
+            success: function (rp) {
+                videoId = "";
+                var oList = JSON.parse(rp);
+                setBroadcast(oList[0]);
+                setHistory(oList[1]);
+                player.loadVideoById({videoId: videoId});
+            }
+        });
     }
 
     function stopVideo() {
