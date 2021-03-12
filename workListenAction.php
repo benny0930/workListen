@@ -43,7 +43,14 @@ else if ($type == "interstitial") {
         'title' => $title,
         'timestamp'=>'',
     ];
-    foreach ($aDate as $oDate){
+    foreach ($aDate as $key => $oDate){
+        if ($key == 1) {
+            $aNewDate[] = [
+                'id' => $id,
+                'title' => $title,
+                'timestamp'=>'',
+            ];
+        }
         $aNewDate[] = $oDate;
     }
     $sDate = json_encode($aNewDate);
