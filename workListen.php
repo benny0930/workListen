@@ -101,7 +101,7 @@
                 <h5 class="card-header">點播歌曲</h5>
                 <div class="card-body">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="youtube_url" placeholder="Youtube 網址">
+                        <input type="text" class="form-control" id="youtube_url" placeholder="Youtube 網址"/>
                         <span class="input-group-append">
                           <button class="btn btn-info" type="button" onclick="add()">點播</button>
                             <!--                          <button class="btn btn-warning" type="button" onclick="interstitial()">插播</button>-->
@@ -225,7 +225,7 @@
 
     function onPlayerStateChange(event) {
         console.log('onPlayerStateChange = ' + event.data);
-        if (event.data == YT.PlayerState.ENDED) {
+        if (event.data === YT.PlayerState.ENDED) {
             console.log("結束");
             console.log(admin);
             if (admin === "admin") {
@@ -233,15 +233,13 @@
             } else {
                 setTimeout(end, 3000);
             }
-
-
-        } else if (event.data == YT.PlayerState.PAUSED) {
+        } else if (event.data === YT.PlayerState.PAUSED) {
             console.log("暫停");
-        } else if (event.data == YT.PlayerState.PLAYING) {
+        } else if (event.data === YT.PlayerState.PLAYING) {
             console.log("播放");
-        } else if (event.data == YT.PlayerState.BUFFERING) {
+        } else if (event.data === YT.PlayerState.BUFFERING) {
             console.log("讀取中");
-        } else if (event.data == YT.PlayerState.CUED) {
+        } else if (event.data === YT.PlayerState.CUED) {
             console.log("提示");
         } else {
             console.log("未知狀態");
@@ -256,10 +254,17 @@
             url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
             success: function (rp) {
                 videoId = "";
+                timestamp = "";
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
-                player.loadVideoById({videoId: videoId});
+                if (timestamp === '') {
+                    startSeconds = 0
+                } else {
+                    var timestamp_now = Date.parse(new Date()) / 1000;
+                    startSeconds = timestamp_now - timestamp;
+                }
+                player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
             }
         });
     }
