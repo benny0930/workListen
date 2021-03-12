@@ -258,15 +258,18 @@
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
-                if (timestamp === '') {
-                    startSeconds = 0
-                } else {
-                    var timestamp_now = Date.parse(new Date()) / 1000;
-                    startSeconds = timestamp_now - timestamp;
-                }
-                player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
+                setTimeout(loadVideoById, 2000);
             }
         });
+    }
+    function loadVideoById() {
+        if (timestamp === '') {
+            startSeconds = 0
+        } else {
+            var timestamp_now = Date.parse(new Date()) / 1000;
+            startSeconds = timestamp_now - timestamp;
+        }
+        player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
     }
 
     function stopVideo() {
