@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="悬浮/css/reset.min.css">
+    <style>
+
+        .ddd {
+            width: 100%;
+            height: 3500px;
+        }
+
+        .box { width: 600px; }
+
+        #videoBox {
+            border: 10px solid #212223;
+            transition: 0.5s;
+        }
+
+        video {
+            width: 100%;
+            vertical-align: bottom;
+        }
+
+        #videoBox.in { animation: ac 1s; }
+
+        #videoBox.out {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            z-index: 999;
+            animation: an 0.5s;
+        }
+    </style>
+</head>
+<body>
+<div id="site">
+    <div id="videoBox" class="box">
+        <video width="400" controls>
+            <source src="movie/华晨宇心动.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+    </div>
+    <div class="ddd">
+        <div class="bd">
+            <ul class="tab">
+                <li class="tab-item active">商品详情<span>◆</span></li>
+                <li class="tab-item">购票须知</li>
+            </ul>
+            <div class="way">
+                <div class="main selected">
+                    <div class="peisong">观演须知</div>
+                    <p>演出时长：约120分钟（以现场为准）</p>
+                    <p>限购政策：每个账号最多购买4张</p>
+                    <p>实名制：购买时您需要输入购票人身份证信息，每张门票对应一个证件号</p>
+                    <p>退换说明：因票品受时效性、稀缺性及销售周期影响，退换票行为将影响到其他观众的正当权益，若您有退票需求，将产生相应费用，详见大麦网退换说明</p>
+                    <p>儿童入场说明：1.2米以上凭成人票入场，1.2米以下谢绝入场</p>
+                    <p>入场时间：提前约90分钟</p>
+                    <p>座位类型：请按门票对应位置，有序对号入座</p>
+                    <p>发票说明：如需发票，请您在演出开始前通过订单页补开，发票将在演出结束后1个月左右，统一由开具方提供</p>
+                    <p>禁止携带物品：由于安保和版权的原因，大多数演出、展览及比赛场所禁止携带食品、饮料、专业摄录设备、打火机等物品，请您注意现场工作人员和广播的提示，予以配合</p>
+                    <p>物品寄存：无寄存处，请自行保管携带物品</p>
+                    <p>主要演员（团体）：华晨宇</p>
+                    <p>最低演出曲目数：28</p>
+                    <p>最低演出时长：以现场为准</p>
+                    <div class="peisong">退换说明</div>
+                    <p>
+                        支持有偿退换<br><br>
+                        因票品受时效性、稀缺性及销售周期影响，退换票行为将影响到其他观众的正当权益，若您有退票需求，
+                        将产生相应费用 ，详见《订票服务条款》
+                    </p>
+                    <div class="peisong">演出介绍</div>
+                    <p>我就是一个自由的人，一个没有颜色的人。</p>
+                    <img src="images/h1.jpg"><br><br>
+                    <p>华晨宇，1990年2月7日生于湖北十堰 ，中国男歌手，毕业于武汉音乐学院。</p>
+                    <p>
+                        2013年，参加湖南卫视《快乐男声》获年度总冠军出道。2014年1月，首登央视春晚舞台。同年4月，参加户外真人秀节目《花儿与少年》。
+                        9月6日-7日，在北京万事达中心连开两场“火星”演唱会 ，随后首张个人专辑《卡西莫多的礼物》发行，
+                        并凭此专辑获2015QQ音乐年度最佳内地男歌手及第十五届音乐风云榜年度最受欢迎男歌手等奖项。
+                        2015年7月31日-8月2日，在上海大舞台连开三场个人演唱 。
+                        12月，发行第二张专辑《异类》，获2016酷音乐亚洲盛典年度最佳专辑等奖项。
+                    </p>
+                    <p>
+                        2016年9月27日，出席亚洲新歌榜2016年度盛典，揽获最佳男歌手奖。10月，加盟东方卫视《天籁之战》。
+                        12月2日，获2016MAMA亚洲最佳艺人奖。2017年3月14日，专辑《H》发行。6月，参加旅行真人秀《旅途的花样》。
+                        2018年2月，参加湖南卫视《歌手2018》，获总决赛亚军。9月8日-9日，2018火星演唱会在鸟巢体育场连开两场 。2
+                        019年2月，担任浙江卫视《王牌对王牌第四季》固定MC。
+                    </p>
+                    <img src="images/h2.jpg" width="700"><br><br>
+                    <P>你们一直红<br>我就一直红</P>
+                    <img src="images/h3.jpg"><br><br>
+                    <p>1、避免影响抢票体验，请您升级到大麦App最新版本购票。</p>
+                    <p>2、请您提前在大麦App后台添加完整个人的购票信息，包括身份证、电话、地址，以方便购票。</p>
+                    <p>3、因项目火爆，不支持合并配送，不支持不同订单号连座安排，敬请谅解。</p>
+                    <p>
+                        4、对于异常订购行为，大麦网有权在订单成立或者生效之后取消相应订单。异常订购行为包括但不限于以下情形：
+                        （1）通过同一ID订购超出限购张数的订单；
+                        （2）经合理判断认为非真实消费者的下单行为，包括但不限于通过批量相同或虚构的支付账号、收货地址（包括下单时填写及最终实际收货地址）、收件人、电话号码订购超出限购张数的订单。
+                    </p>
+                    <p>因主办方要求本项目实名制购买，一票一证，每个用户限购4张，</p>
+                    <p>
+                        一票一证：指每张门票均需对应不同且首次使用的身份证号码。无论同一订单购买单张或多张门票，
+                        如您提供的身份证信息已被用于其他购票渠道购买本项目门票，或出现多张门票重复使用同一身份证信息等任何违反一票一证制度的购买行为，
+                        大麦网将会在5个工作日内通过系统原路退回该订单下全部票款，不予配票。
+                        请您购买前务必选择【不同】且【未被使用在其他购票渠道】的【真实】身份证信息进行购票！
+                        您点击购买本项目票品的行为，视同已详细阅读并认可上述全部购票规则。
+                    </p>
+
+                    <br><br><br><br><br><br>
+                </div>
+                <div class="main">
+                    <div class="peisong">支付及配送</div>
+                    <span>
+                        1.同城10.0元，发货后1-3天到达；省内12.0元，发货后1-3天到达；<br>
+                        其他地区18.0元，发货后1-3天到达；澳门、香港、台湾40.0元，发货后1-5天到达。<br>
+                        2.演出前4天不支持快递。<br><br><br><br><br><br>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js "></script>
+<script>
+    var ha = ($('#videoBox').offset().top + $('#videoBox').height());
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > ha + 300) {
+            $('#videoBox').css('bottom', '0');
+        } else if ($(window).scrollTop() < ha + 200) {
+            $('#videoBox').removeClass('out').addClass('in');
+        } else {
+            $('#videoBox').removeClass('in').addClass('out');
+            $('#videoBox').css('bottom', '-300px');
+        }
+
+    });
+</script>
+</body>
+</html>

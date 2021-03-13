@@ -115,7 +115,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字" value="孫雪寧"/>
                         <span class="input-group-append">
-                          <button class="btn btn-info" type="button" onclick="search()">搜尋</button>
+                          <button class="btn btn-danger" type="button" onclick="search()">搜尋</button>
                         </span>
                         <hr/>
 
@@ -168,7 +168,12 @@
             if (title2.length > 43) {
                 title2 = title2.slice(0, 40) + '...';
             }
-            $("#broadcast").append('<li class="list-group-item">' + (parseInt(key) + 1) + "=>" + title2 + '</li>');
+            if (key === '0') {
+                $("#broadcast").append('<li class="list-group-item"> ' + title2 + '</li>');
+            } else {
+                $("#broadcast").append('<li class="list-group-item"><button class="btn btn-dark" type="button" onclick="del(\'' + value.id + '\')">刪除</button> - ' + title2 + '</li>');
+            }
+
         }
     }
 
@@ -178,6 +183,7 @@
         var oHistory = JSON.parse(sHistory);
         var index = Math.floor(Math.random() * Object.keys(oHistory).length);
         for (const [key, value] of Object.entries(oHistory)) {
+            console.log(typeof value);
             if (videoId === '' && parseInt(key) === index) {
                 videoId = value.id;
                 timestamp = value.timestamp;
@@ -187,7 +193,10 @@
             if (title1.length > 43) {
                 title1 = title1.slice(0, 40) + '...';
             }
-            $("#history").append('<li class="list-group-item">' + title1 + '</li>');
+            $("#history").append('<li class="list-group-item">' +
+                '<button class="btn btn-info" type="button" onclick="add(\'' + value.id + '\',\'' + value.title + '\')">點播</button>\n' +
+                '<button class="btn btn-warning" type="button" onclick="interstitial(\'' + value.id + '\',\'' + value.title + '\')">插播</button>' +
+                title1 + '</li>');
         }
     }
 
@@ -269,12 +278,14 @@
             async: false,
             url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
             success: function (rp) {
+                console.log(rp);
                 videoId = "";
                 timestamp = "";
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
                 setTimeout(loadVideoById, 2000);
+                setTimeout(loadVideoById, 3000);
             }
         });
     }
@@ -295,7 +306,7 @@
     }
 
     function add(id, title) {
-        console.log('點播');
+        console.log('點播 Add - ' + id + " - " + title);
         if (id === "") {
             var url = $("#youtube_url").val();
             $("#youtube_url").val("");
@@ -317,7 +328,7 @@
             async: false,
             url: './workListenAction.php?type=add&filename=broadcast.txt&id=' + id + '&title=' + title,
             success: function (rp) {
-                // console.log(rp)
+                console.log(rp)
                 setBroadcast(rp);
             }
         });
@@ -325,8 +336,20 @@
 
     }
 
+    function del(id) {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: './workListenAction.php?type=del&filename=broadcast.txt&id=' + id,
+            success: function (rp) {
+                console.log(rp)
+                setBroadcast(rp);
+            }
+        });
+    }
+
     function interstitial(id, title) {
-        console.log('插播');
+        console.log('插播 interstitial - ' + id + " - " + title);
         if (id === "") {
             var url = $("#youtube_url").val();
             $("#youtube_url").val("");
