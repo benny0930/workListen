@@ -435,6 +435,32 @@
         return title;
     }
 
+    function search() {
+        console.log('搜尋');
+        var youtube_keyword = $("#youtube_keyword").val();
+        $("#youtube_keyword").val("");
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=10',
+            success: function (rp) {
+                $("#youtube_search_div").html("");
+                console.log(rp);
+
+                for (var i = 0; i < rp.items.length; i++) {
+                    var thisOne = rp.items[i];
+                    console.log();
+                    var img = $("<img class=\"card-img-top\" src=\"" + thisOne.snippet.thumbnails.high.url + "\" alt=\"Card image cap\">");
+                    var body = $("<div class=\"card-body\"><div>").append("<p class=\"card-text\">" + thisOne.snippet.title + "</p>");
+                    body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
+                    body.append("<button class=\"btn btn-warning\" type=\"button\" onclick=\"interstitial('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">插播</button>");
+                    var div = $("<div class=\"card-body\"><div class=\"card\" style=\"width: 18rem;\"><div><div>").append(img).append(body)
+                    $("#youtube_search_div").append(div);
+                }
+            }
+        });
+    }
+
     function searchPlaylist() {
         console.log('搜尋');
         var youtube_keyword = $("#youtube_playlist_keyword").val();
@@ -446,18 +472,7 @@
             success: function (rp) {
                 $("#youtube_search_playlist_div").html("");
                 console.log(rp);
-                /*
-                <div class="card-body">
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">1111</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                </div>
-                 */
+                
                 for (var i = 0; i < rp.items.length; i++) {
                     var thisOne = rp.items[i];
                     console.log();
