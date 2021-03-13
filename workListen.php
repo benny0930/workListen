@@ -75,7 +75,7 @@
             <!-- 待播清單 -->
             <div class="card mb-4">
                 <h5 class="card-header">待播清單</h5>
-                <div class="card-body">
+                <div class="card-body playlist">
                     <p class="card-text">若清單為空會從近100歷史紀錄隨機則一</p>
                     <ul class="list-group list-group-flush" id="broadcast">
                         <!--                        <li class="list-group-item">Cras justo odio</li>-->
@@ -86,7 +86,7 @@
             <!-- 歷史紀錄 -->
             <div class="card mb-4">
                 <h5 class="card-header">歷史紀錄</h5>
-                <div class="card-body">
+                <div class="card-body playlist">
                     <ul class="list-group list-group-flush" id="history">
                         <!--                        <li class="list-group-item">Cras justo odio</li>-->
                     </ul>
@@ -112,12 +112,16 @@
             <div class="card mb-4">
                 <h5 class="card-header">
                     搜尋歌曲
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_youtube_keyword" aria-expanded="false" aria-controls="collapse_youtube_keyword" style="float: right;">展開</button>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                            data-target="#collapse_youtube_keyword" aria-expanded="false"
+                            aria-controls="collapse_youtube_keyword" style="float: right;">展開
+                    </button>
                 </h5>
                 <div class="collapse" id="collapse_youtube_keyword">
                     <div class="card-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字" value="孫雪寧"/>
+                            <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字"
+                                   value="孫雪寧"/>
                             <span class="input-group-append">
                           <button class="btn btn-danger" type="button" onclick="search()">搜尋</button>
                         </span>
@@ -126,18 +130,22 @@
                         </div>
 
                     </div>
-                    <div id="youtube_search_div" style="height: 500px;overflow: auto;"></div>
+                    <div id="youtube_search_div" class="youtube_search_div"></div>
                 </div>
             </div>
             <div class="card mb-4">
                 <h5 class="card-header">
                     搜尋頻道
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_youtube_playlist_keyword" aria-expanded="false" aria-controls="collapse_youtube_playlist_keyword" style="float: right;">展開</button>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                            data-target="#collapse_youtube_playlist_keyword" aria-expanded="false"
+                            aria-controls="collapse_youtube_playlist_keyword" style="float: right;">展開
+                    </button>
                 </h5>
                 <div class="collapse" id="collapse_youtube_playlist_keyword">
                     <div class="card-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="youtube_playlist_keyword" placeholder="請輸入關鍵字" value="PLzw4iZ9KuGpiOqlFuI8rRrGrfb2z6AQHh"/>
+                            <input type="text" class="form-control" id="youtube_playlist_keyword" placeholder="請輸入頻道ID"
+                                   value="PLzw4iZ9KuGpiOqlFuI8rRrGrfb2z6AQHh"/>
                             <span class="input-group-append">
                           <button class="btn btn-danger" type="button" onclick="searchPlaylist()">搜尋</button>
                         </span>
@@ -145,13 +153,13 @@
 
                         </div>
                     </div>
-                    <div id="youtube_search_playlist_div" style="height: 500px;overflow: auto;"></div>
+                    <div id="youtube_search_playlist_div" class="youtube_search_div"></div>
                 </div>
-
             </div>
         </div>
     </div>
     <!-- /.row -->
+
 </div>
 <!-- /.container -->
 <!-- Footer -->
@@ -161,6 +169,8 @@
     </div>
     <!-- /.container -->
 </footer>
+
+<video id="videoPlayer" controls src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234" width="0" height="0"></video>
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -222,7 +232,7 @@
             }
             $("#history").append('<li class="list-group-item">' +
                 '<button class="btn btn-info" type="button" onclick="add(\'' + value.id + '\',\'' + value.title + '\')">點播</button>\n' +
-                '<button class="btn btn-warning" type="button" onclick="interstitial(\'' + value.id + '\',\'' + value.title + '\')">插播</button>' +
+                '<button class="btn btn-warning" type="button" onclick="interstitial(\'' + value.id + '\',\'' + value.title + '\')">插播</button> - ' +
                 title1 + '</li>');
         }
     }
@@ -311,8 +321,9 @@
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
-                setTimeout(loadVideoById, 2000);
-                setTimeout(loadVideoById, 5000);
+                setTimeout(playVideo, 2000);
+                setTimeout(loadVideoById, 4000);
+                setTimeout(loadVideoById, 6000);
             }
         });
     }
@@ -472,7 +483,7 @@
             success: function (rp) {
                 $("#youtube_search_playlist_div").html("");
                 console.log(rp);
-                
+
                 for (var i = 0; i < rp.items.length; i++) {
                     var thisOne = rp.items[i];
                     console.log();
@@ -487,6 +498,16 @@
         });
     }
 
+    function playVideo() {
+        console.log('playVideo');
+        var title = $("#player_title").html();
+        title = "現在播放的是"+title.replace(/\s*/g,"");
+        var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
+        console.log(url);
+        document.getElementById("videoPlayer").src = url;
+        document.getElementById("videoPlayer").load();
+        document.getElementById("videoPlayer").play();
+    }
 
     console.log('讀取播放清單');
     var sBroadcast = getNewDate("broadcast.txt");
@@ -496,7 +517,7 @@
     setHistory(sHistory);
     videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
     console.log('videoId = ' + videoId);
-
+    console.log('start');
 
 </script>
 </body>
