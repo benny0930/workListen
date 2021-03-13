@@ -285,7 +285,7 @@
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
                 setTimeout(loadVideoById, 2000);
-                setTimeout(loadVideoById, 3000);
+                setTimeout(loadVideoById, 5000);
             }
         });
     }
@@ -415,7 +415,7 @@
         $.ajax({
             type: 'GET',
             async: false,
-            url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=10',
+            url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=9999',
             success: function (rp) {
                 $("#youtube_search_div").html("");
                 console.log(rp);
