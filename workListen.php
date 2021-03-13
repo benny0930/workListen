@@ -110,19 +110,44 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <h5 class="card-header">搜尋歌曲</h5>
-                <div class="card-body">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字" value="孫雪寧"/>
-                        <span class="input-group-append">
+                <h5 class="card-header">
+                    搜尋歌曲
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_youtube_keyword" aria-expanded="false" aria-controls="collapse_youtube_keyword" style="float: right;">展開</button>
+                </h5>
+                <div class="collapse" id="collapse_youtube_keyword">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="youtube_keyword" placeholder="請輸入關鍵字" value="孫雪寧"/>
+                            <span class="input-group-append">
                           <button class="btn btn-danger" type="button" onclick="search()">搜尋</button>
                         </span>
-                        <hr/>
+                            <hr/>
+
+                        </div>
 
                     </div>
-
+                    <div id="youtube_search_div" style="height: 500px;overflow: auto;"></div>
                 </div>
-                <div id="youtube_search_div" style="height: 500px;overflow: auto;"></div>
+            </div>
+            <div class="card mb-4">
+                <h5 class="card-header">
+                    搜尋頻道
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_youtube_playlist_keyword" aria-expanded="false" aria-controls="collapse_youtube_playlist_keyword" style="float: right;">展開</button>
+                </h5>
+                <div class="collapse" id="collapse_youtube_playlist_keyword">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="youtube_playlist_keyword" placeholder="請輸入關鍵字" value="PLzw4iZ9KuGpiOqlFuI8rRrGrfb2z6AQHh"/>
+                            <span class="input-group-append">
+                          <button class="btn btn-danger" type="button" onclick="searchPlaylist()">搜尋</button>
+                        </span>
+                            <hr/>
+
+                        </div>
+                    </div>
+                    <div id="youtube_search_playlist_div" style="height: 500px;overflow: auto;"></div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -171,6 +196,8 @@
             if (key === '0') {
                 $("#broadcast").append('<li class="list-group-item"> ' + title2 + '</li>');
             } else {
+                console.log('setset');
+                console.log(value);
                 $("#broadcast").append('<li class="list-group-item"><button class="btn btn-dark" type="button" onclick="del(\'' + value.id + '\')">刪除</button> - ' + title2 + '</li>');
             }
 
@@ -408,16 +435,16 @@
         return title;
     }
 
-    function search() {
+    function searchPlaylist() {
         console.log('搜尋');
-        var youtube_keyword = $("#youtube_keyword").val();
-        $("#youtube_keyword").val("");
+        var youtube_keyword = $("#youtube_playlist_keyword").val();
+        $("#youtube_playlist_keyword").val("");
         $.ajax({
             type: 'GET',
             async: false,
-            url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=9999',
+            url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails%2Csnippet&playlistId=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=9999',
             success: function (rp) {
-                $("#youtube_search_div").html("");
+                $("#youtube_search_playlist_div").html("");
                 console.log(rp);
                 /*
                 <div class="card-body">
@@ -436,10 +463,10 @@
                     console.log();
                     var img = $("<img class=\"card-img-top\" src=\"" + thisOne.snippet.thumbnails.high.url + "\" alt=\"Card image cap\">");
                     var body = $("<div class=\"card-body\"><div>").append("<p class=\"card-text\">" + thisOne.snippet.title + "</p>");
-                    body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
-                    body.append("<button class=\"btn btn-warning\" type=\"button\" onclick=\"interstitial('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">插播</button>");
+                    body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.contentDetails.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
+                    body.append("<button class=\"btn btn-warning\" type=\"button\" onclick=\"interstitial('" + thisOne.contentDetails.videoId + "','" + thisOne.snippet.title + "')\">插播</button>");
                     var div = $("<div class=\"card-body\"><div class=\"card\" style=\"width: 18rem;\"><div><div>").append(img).append(body)
-                    $("#youtube_search_div").append(div);
+                    $("#youtube_search_playlist_div").append(div);
                 }
             }
         });
