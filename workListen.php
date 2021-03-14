@@ -170,7 +170,9 @@
     <!-- /.container -->
 </footer>
 
-<video id="videoPlayer" controls src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234" width="0" height="0"></video>
+<video id="videoPlayer" controls
+       src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234" width="0"
+       height="0"></video>
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -182,6 +184,7 @@
     var videoId = '';
     var timestamp = '';
     var player;
+    var videoType = '';
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api"; // Take the API address.
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -198,7 +201,6 @@
                 timestamp = value.timestamp;
                 $("#player_title").html(value.title);
             }
-            console.log(value);
             var title2 = value.title;
             if (title2.length > 43) {
                 title2 = title2.slice(0, 40) + '...';
@@ -206,8 +208,6 @@
             if (key === '0') {
                 $("#broadcast").append('<li class="list-group-item"> ' + title2 + '</li>');
             } else {
-                console.log('setset');
-                console.log(value);
                 $("#broadcast").append('<li class="list-group-item"><button class="btn btn-dark" type="button" onclick="del(\'' + value.id + '\')">刪除</button> - ' + title2 + '</li>');
             }
 
@@ -220,7 +220,6 @@
         var oHistory = JSON.parse(sHistory);
         var index = Math.floor(Math.random() * Object.keys(oHistory).length);
         for (const [key, value] of Object.entries(oHistory)) {
-            console.log(typeof value);
             if (videoId === '' && parseInt(key) === index) {
                 videoId = value.id;
                 timestamp = value.timestamp;
@@ -287,48 +286,70 @@
 
     function onPlayerStateChange(event) {
         console.log('onPlayerStateChange = ' + event.data);
+        videoType = event.data;
         if (event.data === YT.PlayerState.ENDED) {
-            console.log("結束");
-            console.log(admin);
             if (admin === "admin") {
                 end();
             } else {
                 setTimeout(end, 3000);
             }
         } else if (event.data === YT.PlayerState.PAUSED) {
-            console.log("暫停");
         } else if (event.data === YT.PlayerState.PLAYING) {
-            console.log("播放");
         } else if (event.data === YT.PlayerState.BUFFERING) {
-            console.log("讀取中");
         } else if (event.data === YT.PlayerState.CUED) {
-            console.log("提示");
         } else {
             console.log("未知狀態");
         }
     }
 
+    function checkVideoType() {
+        videoType = player.getPlayerState();
+        console.log("檢查影片狀態 = " + videoType);
+        if (videoType === -1) {
+            console.log('send error end');
+            end();
+        }
+    }
+
     function end() {
         console.log('End workListenAction');
+        videoType = player.getPlayerState();
         $.ajax({
             type: 'GET',
             async: false,
-            url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin,
+            url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin + '&videoType=' + videoType,
             success: function (rp) {
-                console.log(rp);
                 videoId = "";
                 timestamp = "";
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
+                if(videoType===-1){
+                    setTimeout(loadVideoByIdAfterError, 500);
+                }
                 setTimeout(playVideo, 2000);
                 setTimeout(loadVideoById, 4000);
                 setTimeout(loadVideoById, 6000);
+                setTimeout(checkVideoType, 8000);
             }
         });
     }
 
     function loadVideoById() {
+        console.log('讀取影片 ' + videoId);
+        if (timestamp === '') {
+            startSeconds = 0
+        } else {
+            var timestamp_now = Date.parse(new Date()) / 1000;
+            startSeconds = timestamp_now - timestamp;
+        }
+        videoType = player.getPlayerState();
+        if (videoType !== -1)
+            player.loadVideoById({videoId: videoId, startSeconds: startSeconds,})
+    }
+
+    function loadVideoByIdAfterError() {
+        console.log('讀取影片 ' + videoId);
         if (timestamp === '') {
             startSeconds = 0
         } else {
@@ -366,7 +387,6 @@
             async: false,
             url: './workListenAction.php?type=add&filename=broadcast.txt&id=' + id + '&title=' + title,
             success: function (rp) {
-                console.log(rp)
                 setBroadcast(rp);
             }
         });
@@ -380,7 +400,6 @@
             async: false,
             url: './workListenAction.php?type=del&filename=broadcast.txt&id=' + id,
             success: function (rp) {
-                console.log(rp)
                 setBroadcast(rp);
             }
         });
@@ -409,7 +428,6 @@
             async: false,
             url: './workListenAction.php?type=interstitial&filename=broadcast.txt&id=' + id + '&title=' + title,
             success: function (rp) {
-                // console.log(rp)
                 setBroadcast(rp);
             }
         });
@@ -421,7 +439,7 @@
             return false;
         }
         var title = "";
-        var url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=' + 'AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU' + '&part=snippet';
+        var url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=' + 'AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&part=snippet';
         $.ajax({
             type: 'GET',
             async: false,
@@ -434,6 +452,7 @@
     }
 
     function getNewDate(fileName) {
+        console.log('讀取清單 = ' + fileName);
         var title = "{}";
         $.ajax({
             type: 'GET',
@@ -456,11 +475,8 @@
             url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=10',
             success: function (rp) {
                 $("#youtube_search_div").html("");
-                console.log(rp);
-
                 for (var i = 0; i < rp.items.length; i++) {
                     var thisOne = rp.items[i];
-                    console.log();
                     var img = $("<img class=\"card-img-top\" src=\"" + thisOne.snippet.thumbnails.high.url + "\" alt=\"Card image cap\">");
                     var body = $("<div class=\"card-body\"><div>").append("<p class=\"card-text\">" + thisOne.snippet.title + "</p>");
                     body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.id.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
@@ -482,11 +498,8 @@
             url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails%2Csnippet&playlistId=' + youtube_keyword + '&key=AIzaSyA5wYIKmGNmhE0qNaPYnZmeApz7v_OhhsU&type=video&maxResults=9999',
             success: function (rp) {
                 $("#youtube_search_playlist_div").html("");
-                console.log(rp);
-
                 for (var i = 0; i < rp.items.length; i++) {
                     var thisOne = rp.items[i];
-                    console.log();
                     var img = $("<img class=\"card-img-top\" src=\"" + thisOne.snippet.thumbnails.high.url + "\" alt=\"Card image cap\">");
                     var body = $("<div class=\"card-body\"><div>").append("<p class=\"card-text\">" + thisOne.snippet.title + "</p>");
                     body.append("<button class=\"btn btn-info\" type=\"button\" onclick=\"add('" + thisOne.contentDetails.videoId + "','" + thisOne.snippet.title + "')\">點播</button>");
@@ -499,26 +512,24 @@
     }
 
     function playVideo() {
-        console.log('playVideo');
+        // console.log('playVideo');
         var title = $("#player_title").html();
-        title = "現在播放的是"+title.replace(/\s*/g,"");
+        title = "現在播放的是" + title.replace(/\s*/g, "");
+        console.log(title);
         var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
-        console.log(url);
+        // console.log(url);
         document.getElementById("videoPlayer").src = url;
         document.getElementById("videoPlayer").load();
         document.getElementById("videoPlayer").play();
     }
 
-    console.log('讀取播放清單');
+
     var sBroadcast = getNewDate("broadcast.txt");
-    setBroadcast(sBroadcast);
-    console.log("讀取歷史清單");
     var sHistory = getNewDate("history.txt");
+    setBroadcast(sBroadcast);
     setHistory(sHistory);
     videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
     console.log('videoId = ' + videoId);
-    console.log('start');
-
 </script>
 </body>
 </html>

@@ -88,6 +88,7 @@ switch ($type) {
     case 'end':
         $id = $_GET['id'];
         $admin = empty($_GET['admin']) ? "" : $_GET['admin'];
+        $videoType = empty($_GET['videoType']) ? "" : $_GET['videoType'];
         $broadcast = 'broadcast.txt';
         $str = file_get_contents($broadcast);
         $aDate = json_decode($str, true);
@@ -117,7 +118,9 @@ switch ($type) {
             if (count($aNewDate) == 0) {
                 $iNewDateIndex = rand(0, (count($aDate2) - 1));
             }
-            $aDate2[] = $saveDate;
+            if ($videoType != '-1') {
+                $aDate2[] = $saveDate;
+            }
             if (count($aDate2) > 50) {
                 array_splice($aDate2, 0, 1);
             }
