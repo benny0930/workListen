@@ -170,9 +170,7 @@
     <!-- /.container -->
 </footer>
 
-<video id="videoPlayer" controls
-       src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234" width="0"
-       height="0"></video>
+
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -324,7 +322,7 @@
                 var oList = JSON.parse(rp);
                 setBroadcast(oList[0]);
                 setHistory(oList[1]);
-                if(videoType===-1){
+                if (videoType === -1) {
                     setTimeout(loadVideoByIdAfterError, 500);
                 }
                 setTimeout(playVideo, 2000);
@@ -516,11 +514,16 @@
         var title = $("#player_title").html();
         title = "現在播放的是" + title.replace(/\s*/g, "");
         console.log(title);
-        var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
+        // //         https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234
+        // var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
         // console.log(url);
-        document.getElementById("videoPlayer").src = url;
-        document.getElementById("videoPlayer").load();
-        document.getElementById("videoPlayer").play();
+        // document.getElementById("videoPlayer").src = url;
+        // // document.getElementById("videoPlayer").load();
+        // document.getElementById("videoPlayer").play();
+        var speech = new SpeechSynthesisUtterance();
+        speech.text = title;// 获取并设置说话时的文本
+        speechSynthesis.speak(speech);
+
     }
 
 
