@@ -317,7 +317,6 @@
         }
 
         function setChatroom(sHistory) {
-            console.log("setChatroom");
             var aArray = JSON.parse(sHistory);
             var oHistory = JSON.parse(aArray[0]);
             setOnlineUser(aArray[1]);
@@ -388,7 +387,6 @@
             oHistory = JSON.parse(oHistory);
             $("#online_user").html("");
             for (const [key, value] of Object.entries(oHistory)) {
-                console.log(key);
                 $("#online_user").append('<li class="list-group-item">'+value['name']+'</li>')
             }
 
