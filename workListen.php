@@ -643,20 +643,19 @@
     }
 
     function playVideo() {
-        // // console.log('playVideo');
-        // var title = $("#player_title").html();
-        // title = "現在播放的是" + title.replace(/\s*/g, "");
-        // console.log(title);
-        // // //         https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234
-        // // var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
-        // // console.log(url);
-        // // document.getElementById("videoPlayer").src = url;
-        // // // document.getElementById("videoPlayer").load();
-        // // document.getElementById("videoPlayer").play();
-        // var speech = new SpeechSynthesisUtterance();
-        // speech.text = title;// 获取并设置说话时的文本
-        // speechSynthesis.speak(speech);
-
+        // console.log('playVideo');
+        var title = $("#player_title").html();
+        title = "現在播放的是" + title.replace(/\s*/g, "");
+        console.log(title);
+        // //         https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234
+        // var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
+        // console.log(url);
+        // document.getElementById("videoPlayer").src = url;
+        // // document.getElementById("videoPlayer").load();
+        // document.getElementById("videoPlayer").play();
+        var speech = new SpeechSynthesisUtterance();
+        speech.text = title;// 获取并设置说话时的文本
+        speechSynthesis.speak(speech);
     }
 
     function sendMsg() {
