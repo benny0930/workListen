@@ -1,20 +1,57 @@
 <?php
 
+function fileWrite($path, $string)
+{
+    $fp = fopen($path, "w+"); //w是寫入模式,檔案不存在則建立檔案寫入。
+    fwrite($fp, $string);
+    fclose($fp);
+}
+
 $type = $_GET['type'];
+
+function GetMyConnection()
+{
+    $servername = "34.80.17.96";
+    $username = "homestead";
+    $password = "e6teNX28AWcFy5hC";
+    $dbname = "homestead";
+
+    $dbms = 'mysql';     //数据库类型
+    $host = '34.80.17.96'; //数据库主机名
+    $dbName = 'homestead';    //使用的数据库
+    $user = 'homestead';      //数据库连接用户名
+    $pass = 'e6teNX28AWcFy5hC';          //对应的密码
+    $dsn = "$dbms:host=$host;dbname=$dbName";
+    $db = new PDO($dsn, $user, $pass);
+    return $db;
+
+}
+
 
 switch ($type) {
     case 'read':
         $file_path = $_GET['filename'];
-        $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
-        fclose($fp);
-        $str = file_get_contents($file_path);
-        if ($str == "") {
-            $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
-            fwrite($fp, "[]");
-            fclose($fp);
-            echo "[]";
-        } else {
-            echo $str;
+        switch ($file_path) {
+            case 'chatroom.txt':
+                $connection = GetMyConnection();
+                $sql = "SELECT * FROM fa_chatroom";
+                $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($result);
+                break;
+            default:
+
+                $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
+                fclose($fp);
+                $str = file_get_contents($file_path);
+                if ($str == "") {
+                    $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
+                    fwrite($fp, "[]");
+                    fclose($fp);
+                    echo "[]";
+                } else {
+                    echo $str;
+                }
+                break;
         }
         break;
     case 'add':
@@ -157,32 +194,19 @@ switch ($type) {
     case 'sendMsg':
         $name = $_GET['name'];
         $msg = $_GET['msg'];
-        $file_path = 'chatroom.txt';
-        $str = file_get_contents($file_path);
-        $aDate = json_decode($str, true);
-        if ($name !== "" || $msg != "") {
-            $aDate[] = [
-                'timestamp' => strtotime("now"),
-                'name' => $name,
-                'msg' => $msg,
-            ];
-            if (count($aDate) > 50) {
-                array_splice($aDate2, 0, 1);
-            }
-        }
-        $sDate = json_encode(array_filter($aDate));
-        fileWrite($file_path, $sDate);
-        echo $sDate;
+        $connection = GetMyConnection();
+
+        $sql = "INSERT INTO `fa_chatroom` (`name`, `msg`, `timestamp`) VALUES ('" . $name . "', '" . $msg . "', '" . strtotime("now") . "');";
+        $result = $connection->exec($sql);
+
+        $sql = "SELECT * FROM fa_chatroom";
+        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
         break;
     default:
         break;
 }
 
 
-function fileWrite($path, $string)
-{
-    $fp = fopen($path, "w+"); //w是寫入模式,檔案不存在則建立檔案寫入。
-    fwrite($fp, $string);
-    fclose($fp);
-}
+
 

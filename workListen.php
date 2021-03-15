@@ -363,7 +363,7 @@
         setTimeout(function(){
             sChatroom = getNewDate("chatroom.txt");
             setChatroom(sChatroom);
-        }, 5000);
+        }, 2000);
     }
 
     function onYouTubeIframeAPIReady() {
@@ -694,6 +694,7 @@
     var sBroadcast = getNewDate("broadcast.txt");
     var sHistory = getNewDate("history.txt");
     var sChatroom = getNewDate("chatroom.txt");
+    console.log(sChatroom);
     setBroadcast(sBroadcast);
     setHistory(sHistory);
     setChatroom(sChatroom);
