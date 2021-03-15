@@ -34,14 +34,21 @@ switch ($type) {
         $userName = $_GET['userName'];
         switch ($file_path) {
             case 'chatroom.txt':
-
+                $sDate1 = "[]";
                 $sql = "SELECT * FROM fa_chatroom";
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 if ($result) {
-                    echo json_encode($result);
-                } else {
-                    echo "[]";
+                    $sDate1 = json_encode($result);
                 }
+
+                $sql = "INSERT INTO `fa_user_online` (`name`, `timestamp`) VALUES ('" . $userName . "', '" . strtotime("now") . "') ON DUPLICATE KEY UPDATE `timestamp` = '" . strtotime("now") . "'";
+                $result = $connection->exec($sql);
+
+                $sql = "SELECT * FROM fa_user_online where `timestamp` > " . (strtotime("now")-10);
+                $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                $sData2 = json_encode($result);
+
+                echo json_encode([$sDate1, $sData2]);
 
                 break;
             case 'broadcast.txt':

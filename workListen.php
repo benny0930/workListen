@@ -217,6 +217,21 @@
                     </div>
                 </div>
             </div>
+            <div class="card mb-4">
+                <h5 class="card-header">
+                    當前在線
+                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                            data-target="#collapse_online" aria-expanded="false"
+                            aria-controls="collapse_online" style="float: right;">展開
+                    </button>
+                </h5>
+                <div class="collapse" id="collapse_online">
+                    <div class="card-body" >
+                        <ul class="list-group" id="online_user">
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.row -->
@@ -302,7 +317,10 @@
         }
 
         function setChatroom(sHistory) {
-            var oHistory = JSON.parse(sHistory);
+            console.log("setChatroom");
+            var aArray = JSON.parse(sHistory);
+            var oHistory = JSON.parse(aArray[0]);
+            setOnlineUser(aArray[1]);
             var length = Object.keys(oHistory).length;
             var isAdd = 0;
             if (aChatroom.length === 0) {
@@ -360,12 +378,21 @@
                 aChatroomSend = [];
             }
 
-            // setTimeout(function () {
-            //     sChatroom = getNewDate("chatroom.txt");
-            //     setChatroom(sChatroom);
-            // }, 2000);
+            setTimeout(function () {
+                sChatroom = getNewDate("chatroom.txt");
+                setChatroom(sChatroom);
+            }, 2000);
         }
 
+        function setOnlineUser(oHistory){
+            oHistory = JSON.parse(oHistory);
+            $("#online_user").html("");
+            for (const [key, value] of Object.entries(oHistory)) {
+                console.log(key);
+                $("#online_user").append('<li class="list-group-item">'+value['name']+'</li>')
+            }
+
+        }
         function onYouTubeIframeAPIReady() {
             try {
                 console.log('onYouTubeIframeAPIReady');
