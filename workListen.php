@@ -73,7 +73,10 @@
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <button id="btn_user_name" type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#exampleModal">修改暱稱
+                    data-target="#exampleModal"
+                    style="display: none;"
+            >
+                修改暱稱
             </button>
             <!-- 待播清單 -->
             <div class="card mb-4">
@@ -687,7 +690,6 @@
         $("#btn_user_name").trigger('click');
     } else {
         $("#chatroom_name").attr('disabled', true);
-        $("#btn_user_name").hide();
     }
 
     var sBroadcast = getNewDate("broadcast.txt");
