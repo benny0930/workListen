@@ -666,11 +666,7 @@
         }
 
         $("#chatroom_name").val(userName);
-        if (userName === "") {
-            $("#btn_user_name").trigger('click');
-        } else {
-            $("#chatroom_name").attr('disabled', true);
-        }
+        $("#chatroom_name").attr('disabled', true);
 
         var sBroadcast = getNewDate("broadcast.txt");
         var sHistory = getNewDate("history.txt");
@@ -681,6 +677,9 @@
         setChatroom(sChatroom);
         videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
         console.log('videoId = ' + videoId);
+    }
+    else{
+        $("#btn_user_name").trigger('click');
     }
 </script>
 </body>
