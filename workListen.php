@@ -14,7 +14,7 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/blog-home.css?v1.0.0" rel="stylesheet">
+    <link href="css/blog-home.css?v1.0.1" rel="stylesheet">
 
 </head>
 
@@ -178,7 +178,7 @@
                             </div>
                             <input type="text" class="form-control" id="chatroom_name" placeholder="您的暱稱"/>
                         </div>
-                        <div class="imessage" id="chatroom_imessage"></div>
+                        <div class="imessage unselectable" id="chatroom_imessage"></div>
                         <div class="input-group">
                             <input type="text" class="form-control" id="chatroom_msg" placeholder="請輸入您的訊息"/>
                             <span class="input-group-append">
