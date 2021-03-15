@@ -687,6 +687,7 @@
         $("#btn_user_name").trigger('click');
     } else {
         $("#chatroom_name").attr('disabled', true);
+        $("#btn_user_name").hide();
     }
 
     var sBroadcast = getNewDate("broadcast.txt");
