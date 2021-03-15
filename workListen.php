@@ -22,7 +22,7 @@
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
+    <div class="container header_container">
         <a class="navbar-brand" href="#">辦公室點歌系統</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -250,7 +250,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
 <script>
     <?php
     echo 'var userName="' . (empty($_GET['userName']) ? '' : $_GET['userName']) . '";';
@@ -372,6 +372,7 @@
                 for (let i = 0; i < aChatroomSend.length; i++) {
                     var speech = new SpeechSynthesisUtterance();
                     speech.text = aChatroomSend[i];// 获取并设置说话时的文本
+                    createText(speech.text);
                     speechSynthesis.speak(speech);
                 }
                 aChatroomSend = [];
@@ -706,6 +707,24 @@
 
         if (userName !== 'admin' && userName !== 'Benny') {
             $("#div_online_user").hide();
+        }
+
+        let count = 0;
+        async function createText(text) {
+            let div_text = document.createElement('div.bennyTest');
+            div_text.id="text"+count;
+            count++;
+            div_text.style.position = 'fixed';
+            div_text.style.whiteSpace = 'nowrap'
+            div_text.style.left = (document.documentElement.clientWidth) + 'px';
+            var random = Math.round( Math.random()*document.documentElement.clientHeight );
+            div_text.style.top = random + 'px';
+            div_text.appendChild(document.createTextNode(text));
+            document.body.appendChild(div_text);
+
+            await gsap.to("#"+div_text.id, {duration: 5, x: -1*(document.documentElement.clientWidth+div_text.clientWidth)});
+
+            div_text.parentNode.removeChild(div_text);
         }
 
     }
