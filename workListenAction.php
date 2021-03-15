@@ -7,8 +7,6 @@ function fileWrite($path, $string)
     fclose($fp);
 }
 
-$type = $_GET['type'];
-
 function GetMyConnection()
 {
     $servername = "34.80.17.96";
@@ -28,168 +26,90 @@ function GetMyConnection()
 }
 
 
+$type = $_GET['type'];
+$connection = GetMyConnection();
 switch ($type) {
     case 'read':
         $file_path = $_GET['filename'];
+        $userName = $_GET['userName'];
         switch ($file_path) {
             case 'chatroom.txt':
-                $connection = GetMyConnection();
+
                 $sql = "SELECT * FROM fa_chatroom";
+                $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                if ($result) {
+                    echo json_encode($result);
+                } else {
+                    echo "[]";
+                }
+
+                break;
+            case 'broadcast.txt':
+                if ($userName === "admin") {
+                    $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+                    $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                    if (!$result) {
+                        $sql = "SELECT * FROM fa_history";
+                        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+                        $historyOne = $result[array_rand($result, 1)];
+                        //UPDATE `fa_history` SET `timestamp`='6666' WHERE  `id`='555';
+                        $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $historyOne['id'] . " AND timestamp = '';";
+                        $result = $connection->exec($sql);
+
+                        $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `timestamp`) VALUES ('" . $historyOne['id'] . "', '" . $historyOne['title'] . "','" . strtotime("now") . "');";
+                        $result = $connection->exec($sql);
+                    } else {
+                        $sql = "UPDATE `fa_broadcast` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $result[0]['id'] . "  AND timestamp = '';";
+                        $result = $connection->exec($sql);
+                        $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+                        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                    }
+                }
+                $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($result);
                 break;
-            default:
-
-                $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
-                fclose($fp);
-                $str = file_get_contents($file_path);
-                if ($str == "") {
-                    $fp = fopen($file_path, "a"); //w是寫入模式,檔案不存在則建立檔案寫入。
-                    fwrite($fp, "[]");
-                    fclose($fp);
-                    echo "[]";
+            case 'history.txt':
+                $sql = "SELECT * FROM fa_history order by timestamp desc";
+                $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                if ($result) {
+                    echo json_encode($result);
                 } else {
-                    echo $str;
+                    echo "[]";
                 }
+                break;
+            default:
                 break;
         }
         break;
     case 'add':
         $id = $_GET['id'];
         $title = empty($_GET['title']) ? "" : $_GET['title'];
-        $file_path = $_GET['filename'];
-        $str = file_get_contents($file_path);
-        $aDate = json_decode($str, true);
-        if (!empty($id) && $id != "" && $id != null) {
-            $aDate[] = [
-                'id' => $id,
-                'title' => $title,
-                'timestamp' => '',
-            ];
-        }
-        $sDate = json_encode(array_filter($aDate));
-        fileWrite($file_path, $sDate);
-        echo $sDate;
+
+        $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`) VALUES ('" . $id . "', '" . $title . "');";
+        $result = $connection->exec($sql);
+        $sql = "SELECT * FROM fa_broadcast";
+        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
         break;
     case 'interstitial':
         $id = $_GET['id'];
         $title = empty($_GET['title']) ? "" : $_GET['title'];
 
-        $file_path = $_GET['filename'];
-        $str = file_get_contents($file_path);
-        $aDate = json_decode($str, true);
-
-        if (!empty($id) && $id != "" && $id != null) {
-            $aNewDate = [];
-            $index = count($aDate); // 0 1 2 3 ..
-            if ($index == 0) {
-                $aNewDate[] = [
-                    'id' => $id,
-                    'title' => $title,
-                    'timestamp' => '',
-                ];
-            } else {
-                foreach ($aDate as $key => $oDate) {
-                    $aNewDate[] = $oDate;
-                    if ($key == 0) {
-                        $aNewDate[] = [
-                            'id' => $id,
-                            'title' => $title,
-                            'timestamp' => '',
-                        ];
-                    }
-                }
-            }
-            $sDate = json_encode(array_filter($aNewDate));
-        } else {
-            $sDate = $str;
-        }
-
-        fileWrite($file_path, $sDate);
-        echo $sDate;
+        $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `interstitial`) VALUES ('" . $id . "', '" . $title . "','1');";
+        $result = $connection->exec($sql);
+        $sql = "SELECT * FROM fa_broadcast";
+        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
         break;
     case 'del':
         $id = $_GET['id'];
-        $file_path = $_GET['filename'];
-        $str = file_get_contents($file_path);
-        $aDate = json_decode($str, true);
-        $aNewDate = [];
-        foreach ($aDate as $key => $oDate) {
-            if ($oDate['id'] != $id)
-                $aNewDate[] = $oDate;
-        }
-        $sDate = json_encode(array_filter($aNewDate));
-        fileWrite($file_path, $sDate);
-        echo $sDate;
-        break;
-    case 'end':
-        $id = $_GET['id'];
-        $admin = empty($_GET['admin']) ? "" : $_GET['admin'];
-        $videoType = empty($_GET['videoType']) ? "" : $_GET['videoType'];
-        $sDate1 = "[]";
-        $sDate2 = "[]";
-        if ($admin == "admin") {
-            $broadcast = 'broadcast.txt';
-            $str = file_get_contents($broadcast);
-            $aDate = json_decode($str, true);
-            $saveDate = Null;
-            $aNewDate = [];
-            $iNewDateIndex = -1;
-            foreach ($aDate as $key => $oDate) {
-                if ($key > 0) {
-                    if ($key == 1) {
-                        $oDate['timestamp'] = strtotime("now");
-                    }
-                    $aNewDate[] = $oDate;
-                } else {
-                    $saveDate = $oDate;
-                }
-            }
-
-            $history = 'history.txt';
-            $str = file_get_contents($history);
-            $aDate2 = json_decode($str, true);
-            $aNewDate2 = [];
-            if (count($aNewDate) == 0) {
-                $iNewDateIndex = rand(0, (count($aDate2) - 1));
-            }
-            if ($videoType != '-1') {
-                $aDate2[] = $saveDate;
-            }
-            if (count($aDate2) > 50) {
-                array_splice($aDate2, 0, 1);
-            }
-            $aIds = [];
-            foreach ($aDate2 as $key2 => $oDate2) {
-                if ($iNewDateIndex != -1) {
-                    if ($key2 == $iNewDateIndex) {
-                        $aNewDate[] = [
-                            'id' => $oDate2['id'],
-                            'title' => $oDate2['title'],
-                            'timestamp' => strtotime("now"),
-                        ];
-                    }
-                }
-
-                if (!in_array($oDate2['id'], $aIds)) {
-                    $aNewDate2[] = $oDate2;
-                    $aIds[] = $oDate2['id'];
-                }
-            }
-            $sDate1 = json_encode(array_filter($aNewDate));
-            fileWrite($broadcast, $sDate1);
-            $sDate2 = json_encode(array_filter($aNewDate2));
-            fileWrite($history, $sDate2);
-        } else {
-            $broadcast = 'broadcast.txt';
-            $sDate1 = file_get_contents($broadcast);
-
-            $history = 'history.txt';
-            $sDate2 = file_get_contents($history);
-        }
-
-
-        echo json_encode([$sDate1, $sDate2]);
+        $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
+        $result = $connection->exec($sql);
+        $sql = "SELECT * FROM fa_broadcast";
+        $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
         break;
     case 'sendMsg':
         $name = $_GET['name'];
@@ -202,6 +122,52 @@ switch ($type) {
         $sql = "SELECT * FROM fa_chatroom";
         $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
+        break;
+    case 'end':
+        $id = $_GET['id'];
+        $admin = empty($_GET['admin']) ? "" : $_GET['admin'];
+        $videoType = empty($_GET['videoType']) ? "" : $_GET['videoType'];
+
+        if ($admin == "admin") {
+            $id = $_GET['id'];
+
+            $sql = "SELECT * FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
+            $result = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+
+            $sql = "INSERT INTO `fa_history` (`id`, `title`, `timestamp`) VALUES ('" . $result['youtube_id'] . "', '" . $result['title'] . "', '" . $result['timestamp'] . "');";
+            $result = $connection->exec($sql);
+
+            $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
+            $result = $connection->exec($sql);
+
+            $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+            $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            if (!$result) {
+                $sql = "SELECT * FROM fa_history";
+                $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                $historyOne = $result[array_rand($result, 1)];
+
+                $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $historyOne['id'] . ";";
+                $result = $connection->exec($sql);
+
+                $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `timestamp`) VALUES ('" . $historyOne['id'] . "', '" . $historyOne['title'] . "','" . strtotime("now") . "');";
+                $result = $connection->exec($sql);
+
+                $historyOne['timestamp'] = strtotime("now");
+
+            } else {
+                //
+                $sql = "UPDATE `fa_broadcast` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $result[0]['id'] . ";";
+                $result = $connection->exec($sql);
+            }
+        }
+        $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+        $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        $sql = "SELECT * FROM fa_history order by timestamp desc ";
+        $sDate2 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([json_encode($sDate1), json_encode($sDate2)]);
         break;
     default:
         break;
