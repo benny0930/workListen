@@ -240,6 +240,13 @@
     <?php
     echo 'var userName="' . (empty($_GET['userName']) ? '' : $_GET['userName']) . '";';
     ?>
+    function send_username() {
+        var name = $("#input_username").val();
+        var url = window.location.href;
+
+        document.location.href = url.split("?")[0] + '?' + 'userName=' + name;
+
+    }
     if (userName !== '') {
         var videoId = '';
         var tableId = '';
@@ -657,13 +664,7 @@
             });
         }
 
-        function send_username() {
-            var name = $("#input_username").val();
-            var url = window.location.href;
 
-            document.location.href = url.split("?")[0] + '?' + 'userName=' + name;
-
-        }
 
         $("#chatroom_name").val(userName);
         $("#chatroom_name").attr('disabled', true);
