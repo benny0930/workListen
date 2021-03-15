@@ -217,7 +217,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card mb-4">
+            <div class="card mb-4" id="div_online_user">
                 <h5 class="card-header">
                     當前在線
                     <button class="btn btn-primary" type="button" data-toggle="collapse"
@@ -703,6 +703,11 @@
         setChatroom(sChatroom);
         videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
         console.log('videoId = ' + videoId);
+
+        if (userName !== 'admin' && userName !== 'Benny') {
+            $("#div_online_user").hide();
+        }
+
     }
     else{
         $("#btn_user_name").trigger('click');
