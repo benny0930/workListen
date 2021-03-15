@@ -363,7 +363,7 @@
         setTimeout(function(){
             sChatroom = getNewDate("chatroom.txt");
             setChatroom(sChatroom);
-        }, 1000);
+        }, 5000);
     }
 
     function onYouTubeIframeAPIReady() {
