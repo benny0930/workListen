@@ -154,6 +154,26 @@ switch ($type) {
 
         echo json_encode([$sDate1, $sDate2]);
         break;
+    case 'sendMsg':
+        $name = $_GET['name'];
+        $msg = $_GET['msg'];
+        $file_path = 'chatroom.txt';
+        $str = file_get_contents($file_path);
+        $aDate = json_decode($str, true);
+        if ($name !== "" || $msg != "") {
+            $aDate[] = [
+                'timestamp' => strtotime("now"),
+                'name' => $name,
+                'msg' => $msg,
+            ];
+            if (count($aDate) > 50) {
+                array_splice($aDate2, 0, 1);
+            }
+        }
+        $sDate = json_encode(array_filter($aDate));
+        fileWrite($file_path, $sDate);
+        echo $sDate;
+        break;
     default:
         break;
 }

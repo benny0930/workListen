@@ -14,7 +14,7 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="css/blog-home.css?v1.0.0" rel="stylesheet">
 
 </head>
 
@@ -72,6 +72,9 @@
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8">
+            <button id="btn_user_name" type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#exampleModal">修改暱稱
+            </button>
             <!-- 待播清單 -->
             <div class="card mb-4">
                 <h5 class="card-header">待播清單</h5>
@@ -156,6 +159,61 @@
                     <div id="youtube_search_playlist_div" class="youtube_search_div"></div>
                 </div>
             </div>
+            <div class="card mb-4">
+                <h5 class="card-header">
+                    即時廣播聊天室
+                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                            data-target="#collapse_chatroom" aria-expanded="false"
+                            aria-controls="collapse_chatroom" style="float: right;">展開
+                    </button>
+                </h5>
+                <div class="collapse" id="collapse_chatroom">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">用戶暱稱</span>
+                            </div>
+                            <input type="text" class="form-control" id="chatroom_name" placeholder="您的暱稱"/>
+                        </div>
+                        <div class="imessage" id="chatroom_imessage"></div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="chatroom_msg" placeholder="請輸入您的訊息"/>
+                            <span class="input-group-append">
+                                <button class="btn btn-info" type="button" onclick="sendMsg();">送出</button>
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true"
+                     data-backdrop="static" data-keyboard="false"
+                >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">請輸入您的暱稱</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">用戶暱稱</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                                id="input_username_close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" id="input_username" placeholder="您的暱稱"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="send_username()">送出</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.row -->
@@ -178,11 +236,16 @@
 <script>
     <?php
     echo 'var admin="' . (empty($_GET['admin']) ? 'user' : $_GET['admin']) . '";';
+    echo 'var userName="' . (empty($_GET['userName']) ? '' : $_GET['userName']) . '";';
     ?>
+    userName = (admin !== 'user') ? 'admin' : userName;
     var videoId = '';
     var timestamp = '';
     var player;
     var videoType = '';
+    var aChatroom = [];
+    var aChatroomIndex = [];
+    var aChatroomSend = [];
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api"; // Take the API address.
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -232,6 +295,72 @@
                 '<button class="btn btn-warning" type="button" onclick="interstitial(\'' + value.id + '\',\'' + value.title + '\')">插播</button> - ' +
                 title1 + '</li>');
         }
+    }
+
+    function setChatroom(sHistory) {
+        console.log('設定聊天紀錄');
+        var oHistory = JSON.parse(sHistory);
+        var length = Object.keys(oHistory).length;
+        var isAdd = 0;
+        if (aChatroom.length === 0) {
+            isAdd = 2;
+        } else if (aChatroom.length !== length) {
+            isAdd = 1;
+        } else if (oHistory[length - 1]['timestamp'] !== aChatroom[aChatroom.length - 1]['timestamp']) {
+            isAdd = 1;
+        }
+        if (isAdd === 1 || isAdd === 2) {
+            $("#chatroom_imessage").html("");
+            var name = $("#chatroom_name").val();
+            // <p>2021/03/15 11:24:01</p>
+            // <p class="from-them">YYY : 123456</p>
+            // <p>2021/03/15 11:24:00</p>
+            // <p class="from-me">Benny : 123456</p>
+            for (const [key, value] of Object.entries(oHistory)) {
+                var this_timestamp = parseInt(value.timestamp + "000");
+                var this_name = value.name;
+                var this_msg = value.msg;
+                var date = new Date(this_timestamp);
+                var _class = "from-them";
+                if (this_name === name) {
+                    _class = "from-me";
+                }
+                Y = date.getFullYear() + '-';
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                D = date.getDate() + ' ';
+                h = date.getHours() + ':';
+                m = date.getMinutes() + ':';
+                s = date.getSeconds();
+                $("#chatroom_imessage")
+                    .prepend('<p class="' + _class + '">' + this_name + ' : ' + this_msg + '</p>')
+                    .prepend('<p>' + Y + M + D + h + m + s + '</p>');
+                if (isAdd === 2) {
+                    aChatroomIndex[aChatroomIndex.length] = this_timestamp + "" + this_name;
+                    aChatroom[value.timestamp] = oHistory;
+                } else if (isAdd === 1) {
+                    if (aChatroomIndex.indexOf(this_timestamp + "" + this_name) === -1) {
+                        aChatroomIndex[aChatroomIndex.length] = this_timestamp + "" + this_name;
+                        aChatroom[value.timestamp] = oHistory;
+                        aChatroomSend[aChatroomSend.length] = this_name + "說" + this_msg;
+                        if (aChatroomIndex.length > 20) {
+                            aChatroomIndex.shift();
+                            aChatroom.shift();
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < aChatroomSend.length; i++) {
+                var speech = new SpeechSynthesisUtterance();
+                speech.text = aChatroomSend[i];// 获取并设置说话时的文本
+                speechSynthesis.speak(speech);
+            }
+            aChatroomSend = [];
+        }
+
+        setTimeout(function(){
+            sChatroom = getNewDate("chatroom.txt");
+            setChatroom(sChatroom);
+        }, 1000);
     }
 
     function onYouTubeIframeAPIReady() {
@@ -306,6 +435,8 @@
         if (videoType === -1) {
             console.log('send error end');
             end();
+        } else {
+            setTimeout(loadVideoById, 10000);
         }
     }
 
@@ -327,7 +458,6 @@
                 }
                 setTimeout(playVideo, 2000);
                 setTimeout(loadVideoById, 4000);
-                setTimeout(loadVideoById, 6000);
                 setTimeout(checkVideoType, 8000);
             }
         });
@@ -510,29 +640,68 @@
     }
 
     function playVideo() {
-        // console.log('playVideo');
-        var title = $("#player_title").html();
-        title = "現在播放的是" + title.replace(/\s*/g, "");
-        console.log(title);
-        // //         https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234
-        // var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
-        // console.log(url);
-        // document.getElementById("videoPlayer").src = url;
-        // // document.getElementById("videoPlayer").load();
-        // document.getElementById("videoPlayer").play();
-        var speech = new SpeechSynthesisUtterance();
-        speech.text = title;// 获取并设置说话时的文本
-        speechSynthesis.speak(speech);
+        // // console.log('playVideo');
+        // var title = $("#player_title").html();
+        // title = "現在播放的是" + title.replace(/\s*/g, "");
+        // console.log(title);
+        // // //         https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=1234
+        // // var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=zh_tw&client=tw-ob&ttsspeed=1&q=' + title;
+        // // console.log(url);
+        // // document.getElementById("videoPlayer").src = url;
+        // // // document.getElementById("videoPlayer").load();
+        // // document.getElementById("videoPlayer").play();
+        // var speech = new SpeechSynthesisUtterance();
+        // speech.text = title;// 获取并设置说话时的文本
+        // speechSynthesis.speak(speech);
 
     }
 
+    function sendMsg() {
+        console.log('sendMsg');
+        var name = $("#chatroom_name").val();
+        var msg = $("#chatroom_msg").val();
+        if (name === "" || msg === "") {
+            alert("請輸入您的暱稱或信息")
+        }
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: './workListenAction.php?type=sendMsg&name=' + name + '&msg=' + msg,
+            success: function (rp) {
+                $("#chatroom_name").attr('disabled', true);
+                $("#chatroom_msg").val("");
+                setChatroom(rp);
+            }
+        });
+    }
+
+    function send_username() {
+        var name = $("#input_username").val();
+        var url = window.location.href;
+        document.location.href = url + '?' + 'userName=' + name;
+
+    }
+
+    $("#chatroom_name").val(userName);
+    if (userName === "") {
+        $("#btn_user_name").trigger('click');
+    } else {
+        $("#chatroom_name").attr('disabled', true);
+    }
 
     var sBroadcast = getNewDate("broadcast.txt");
     var sHistory = getNewDate("history.txt");
+    var sChatroom = getNewDate("chatroom.txt");
     setBroadcast(sBroadcast);
     setHistory(sHistory);
+    setChatroom(sChatroom);
     videoId = (videoId === '') ? 'rshfNb2ped8' : videoId;
     console.log('videoId = ' + videoId);
+
+
+
+
+
 </script>
 </body>
 </html>
