@@ -356,11 +356,11 @@
                         .prepend('<p>' + Y + M + D + h + m + s + '</p>');
                     if (isAdd === 2) {
                         aChatroomIndex[aChatroomIndex.length] = this_timestamp + "" + this_name;
-                        aChatroom[value.timestamp] = oHistory;
+                        aChatroom[aChatroom.length] = value;
                     } else if (isAdd === 1) {
                         if (aChatroomIndex.indexOf(this_timestamp + "" + this_name) === -1) {
                             aChatroomIndex[aChatroomIndex.length] = this_timestamp + "" + this_name;
-                            aChatroom[value.timestamp] = oHistory;
+                            aChatroom[aChatroom.length] = value;
                             aChatroomSend[aChatroomSend.length] = this_name + "說" + this_msg;
                             if (aChatroomIndex.length > 20) {
                                 aChatroomIndex.shift();
@@ -381,7 +381,7 @@
             setTimeout(function () {
                 sChatroom = getNewDate("chatroom.txt");
                 setChatroom(sChatroom);
-            }, 2000);
+            }, 7000 - isAdd * 3000);
         }
 
         function setOnlineUser(oHistory){
