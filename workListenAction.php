@@ -89,13 +89,15 @@ switch ($type) {
         $id = $_GET['id'];
         $admin = empty($_GET['admin']) ? "" : $_GET['admin'];
         $videoType = empty($_GET['videoType']) ? "" : $_GET['videoType'];
-        $broadcast = 'broadcast.txt';
-        $str = file_get_contents($broadcast);
-        $aDate = json_decode($str, true);
-        $saveDate = Null;
-        $aNewDate = [];
-        $iNewDateIndex = -1;
+        $sDate1 = "[]";
+        $sDate2 = "[]";
         if ($admin == "admin") {
+            $broadcast = 'broadcast.txt';
+            $str = file_get_contents($broadcast);
+            $aDate = json_decode($str, true);
+            $saveDate = Null;
+            $aNewDate = [];
+            $iNewDateIndex = -1;
             foreach ($aDate as $key => $oDate) {
                 if ($key > 0) {
                     if ($key == 1) {
@@ -106,15 +108,11 @@ switch ($type) {
                     $saveDate = $oDate;
                 }
             }
-        } else {
-            $aNewDate = $aDate;
-        }
 
-        $history = 'history.txt';
-        $str = file_get_contents($history);
-        $aDate2 = json_decode($str, true);
-        $aNewDate2 = [];
-        if ($admin == "admin") {
+            $history = 'history.txt';
+            $str = file_get_contents($history);
+            $aDate2 = json_decode($str, true);
+            $aNewDate2 = [];
             if (count($aNewDate) == 0) {
                 $iNewDateIndex = rand(0, (count($aDate2) - 1));
             }
@@ -124,7 +122,6 @@ switch ($type) {
             if (count($aDate2) > 50) {
                 array_splice($aDate2, 0, 1);
             }
-
             $aIds = [];
             foreach ($aDate2 as $key2 => $oDate2) {
                 if ($iNewDateIndex != -1) {
@@ -142,11 +139,19 @@ switch ($type) {
                     $aIds[] = $oDate2['id'];
                 }
             }
+            $sDate1 = json_encode(array_filter($aNewDate));
+            fileWrite($broadcast, $sDate1);
+            $sDate2 = json_encode(array_filter($aNewDate2));
+            fileWrite($history, $sDate2);
+        } else {
+            $broadcast = 'broadcast.txt';
+            $sDate1 = file_get_contents($broadcast);
+
+            $history = 'history.txt';
+            $sDate2 = file_get_contents($history);
         }
-        $sDate1 = json_encode(array_filter($aNewDate));
-        fileWrite($broadcast, $sDate1);
-        $sDate2 = json_encode(array_filter($aNewDate2));
-        fileWrite($history, $sDate2);
+
+
         echo json_encode([$sDate1, $sDate2]);
         break;
     default:

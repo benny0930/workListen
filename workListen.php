@@ -312,12 +312,10 @@
     function end() {
         console.log('End workListenAction');
         videoType = player.getPlayerState();
-        var url = './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin + '&videoType=' + videoType;
-        console.log(url);
         $.ajax({
             type: 'GET',
             async: false,
-            url: url,
+            url: './workListenAction.php?type=end&id=' + videoId + '&admin=' + admin + '&videoType=' + videoType,
             success: function (rp) {
                 videoId = "";
                 timestamp = "";
