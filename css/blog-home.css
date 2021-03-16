@@ -22,6 +22,7 @@ div.playlist {
     height: 700px;
     overflow: auto;
 }
+
 .imessage {
     background-color: #fff;
     border: 1px solid #e5e5ea;
@@ -36,27 +37,38 @@ div.playlist {
     height: 300px;
     overflow: auto;
 }
+
 p.from-me, p.from-them {
     margin: .5rem 0;
     width: fit-content;
 }
+
 p.from-them {
     align-items: flex-start;
     background-color: #e5e5ea;
     color: #000;
 }
+
 p.from-me {
     align-self: flex-end;
     background-color: #248bf5;
     color: #fff;
 }
-.modal-dialog .close{
+
+.modal-dialog .close {
     display: none;
 }
+
 .unselectable {
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
     user-select: none;
+}
+
+.bg-cover {
+    height: 380px;
+    background-size: cover;
+    background-position: center center;
 }

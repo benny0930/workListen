@@ -14,7 +14,7 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/blog-home.css?v1.0.1" rel="stylesheet">
+    <link href="css/blog-home.css?v=<?php echo strtotime("now") ?>" rel="stylesheet">
 
 </head>
 
@@ -226,9 +226,49 @@
                     </button>
                 </h5>
                 <div class="collapse" id="collapse_online">
-                    <div class="card-body" >
+                    <div class="card-body">
                         <ul class="list-group" id="online_user">
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <h5 class="card-header">
+                    低潮夥伴
+                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                            data-target="#collapse_yua_mikami" aria-expanded="false"
+                            aria-controls="collapse_yua_mikami" style="float: right;">展開
+                    </button>
+                </h5>
+                <div class="collapse" id="collapse_yua_mikami">
+                    <div class="card-body" id="collapse_yua_mikami_body"></div>
+                </div>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true"
+                     data-backdrop="static" data-keyboard="false"
+                >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">請輸入您的暱稱</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">用戶暱稱</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                                id="input_username_close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" id="input_username" placeholder="您的暱稱"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="send_username()">送出</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -262,6 +302,7 @@
         document.location.href = url.split("?")[0] + '?' + 'userName=' + name;
 
     }
+
     if (userName !== '') {
         var videoId = '';
         var tableId = '';
@@ -384,14 +425,15 @@
             }, 7000 - isAdd * 3000);
         }
 
-        function setOnlineUser(oHistory){
+        function setOnlineUser(oHistory) {
             oHistory = JSON.parse(oHistory);
             $("#online_user").html("");
             for (const [key, value] of Object.entries(oHistory)) {
-                $("#online_user").append('<li class="list-group-item">'+value['name']+'</li>')
+                $("#online_user").append('<li class="list-group-item">' + value['name'] + '</li>')
             }
 
         }
+
         function onYouTubeIframeAPIReady() {
             try {
                 console.log('onYouTubeIframeAPIReady');
@@ -691,7 +733,6 @@
         }
 
 
-
         $("#chatroom_name").val(userName);
         $("#chatroom_name").attr('disabled', true);
 
@@ -710,25 +751,45 @@
         }
 
         let count = 0;
+
         async function createText(text) {
             let div_text = document.createElement('div.bennyTest');
-            div_text.id="text"+count;
+            div_text.id = "text" + count;
             count++;
             div_text.style.position = 'fixed';
             div_text.style.whiteSpace = 'nowrap'
             div_text.style.left = (document.documentElement.clientWidth) + 'px';
-            var random = Math.round( Math.random()*document.documentElement.clientHeight );
+            var random = Math.round(Math.random() * document.documentElement.clientHeight);
             div_text.style.top = random + 'px';
             div_text.appendChild(document.createTextNode(text));
             document.body.appendChild(div_text);
 
-            await gsap.to("#"+div_text.id, {duration: 5, x: -1*(document.documentElement.clientWidth+div_text.clientWidth)});
+            await gsap.to("#" + div_text.id, {
+                duration: 5,
+                x: -1 * (document.documentElement.clientWidth + div_text.clientWidth)
+            });
 
             div_text.parentNode.removeChild(div_text);
         }
 
-    }
-    else{
+
+        var aImages = [
+            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.180.1440.1440a/s640x640/156849548_877893289451156_7788529398325407524_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=108&_nc_ohc=jA2Qsp-Xj_0AX_ifQMu&oh=5c72fdb8dbb01bb5461b19b1d5482979&oe=607814AC',
+            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/160096652_815345335727764_1773984817380025631_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=104&_nc_ohc=xG7jXemlSdUAX-HzDNY&oh=5c9fd22450b137c5a91e211a9cd5aacc&oe=6079A44B',
+            'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/134252581_2889384648052577_783067974255837671_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=105&_nc_ohc=QUUr3HnCDpoAX_9drY-&oh=0132e39e3fe2f6c7659faee616d88d57&oe=6078CC15',
+            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/132444749_196634048790694_8294525593193877986_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=110&_nc_ohc=UOjjw6xfoYwAX-FX_mw&oh=7e87ff27b52ba2c0d9197547b246ca91&oe=607B8E0E',
+            'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.108.1263.1263a/s320x320/119419401_2050081105124401_180860835831194261_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=LTRBL2wBcg0AX_Kc8UB&oh=62e2565a861ca146fbff4c17be0240b5&oe=6079B7AA',
+            '',
+            '',
+            '',
+        ]
+        for (var i = 0; i < aImages.length; i++) {
+            // <div class="card-body" id="collapse_yua_mikami_body">
+            // <div class="col-12 box bg-cover" style="background-image: url()"></div>
+            if (aImages[i] !== '')
+                $("#collapse_yua_mikami_body").append('<div class=\"col-12 box bg-cover\" style=\"background-image: url(' + aImages[i] + ')\"></div>');
+        }
+    } else {
         $("#btn_user_name").trigger('click');
     }
 </script>
