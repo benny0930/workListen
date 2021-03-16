@@ -44,7 +44,7 @@ switch ($type) {
                 $sql = "INSERT INTO `fa_user_online` (`name`, `timestamp`) VALUES ('" . $userName . "', '" . strtotime("now") . "') ON DUPLICATE KEY UPDATE `timestamp` = '" . strtotime("now") . "'";
                 $result = $connection->exec($sql);
 
-                $sql = "SELECT * FROM fa_user_online where `timestamp` > " . (strtotime("now")-10);
+                $sql = "SELECT * FROM fa_user_online where `timestamp` > " . (strtotime("now")-30);
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 $sData2 = json_encode($result);
 
