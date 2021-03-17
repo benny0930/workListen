@@ -96,7 +96,7 @@ switch ($type) {
 
         $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`) VALUES ('" . $id . "', '" . $title . "');";
         $result = $connection->exec($sql);
-        $sql = "SELECT * FROM fa_broadcast";
+        $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
         $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
@@ -106,7 +106,7 @@ switch ($type) {
 
         $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `interstitial`) VALUES ('" . $id . "', '" . $title . "','1');";
         $result = $connection->exec($sql);
-        $sql = "SELECT * FROM fa_broadcast";
+        $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
         $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
@@ -114,7 +114,7 @@ switch ($type) {
         $id = $_GET['id'];
         $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
         $result = $connection->exec($sql);
-        $sql = "SELECT * FROM fa_broadcast";
+        $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
         $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
