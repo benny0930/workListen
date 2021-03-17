@@ -44,7 +44,7 @@ switch ($type) {
                 $sql = "INSERT INTO `fa_user_online` (`name`, `timestamp`) VALUES ('" . $userName . "', '" . strtotime("now") . "') ON DUPLICATE KEY UPDATE `timestamp` = '" . strtotime("now") . "'";
                 $result = $connection->exec($sql);
 
-                $sql = "SELECT * FROM fa_user_online where `timestamp` > " . (strtotime("now")-30);
+                $sql = "SELECT * FROM fa_user_online where `timestamp` > " . (strtotime("now") - 30);
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 $sData2 = json_encode($result);
 
@@ -141,7 +141,9 @@ switch ($type) {
             $sql = "SELECT * FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
             $result = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
 
-            $sql = "INSERT INTO `fa_history` (`id`, `title`, `timestamp`) VALUES ('" . $result['youtube_id'] . "', '" . $result['title'] . "', '" . $result['timestamp'] . "');";
+            $sql = "INSERT INTO `fa_history` (`id`, `title`, `timestamp`) 
+                    VALUES ('" . $result['youtube_id'] . "', '" . $result['title'] . "', '" . $result['timestamp'] . "') 
+                    ON DUPLICATE KEY UPDATE timestamp='" . $result['timestamp'] . "';";
             $result = $connection->exec($sql);
 
             $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
@@ -150,9 +152,9 @@ switch ($type) {
             $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
             $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             if (!$result) {
-                $sql = "SELECT * FROM fa_history";
+                $sql = "SELECT * FROM fa_history ORDER BY RAND() LIMIT 1;";
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-                $historyOne = $result[array_rand($result, 1)];
+                $historyOne = $result[0];
 
                 $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $historyOne['id'] . ";";
                 $result = $connection->exec($sql);
