@@ -152,7 +152,7 @@ switch ($type) {
             $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
             $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             if (!$result) {
-                $sql = "SELECT * FROM fa_history where `timestamp` < " . (strtotime("now") - 4800) ." ORDER BY RAND() LIMIT 1;";
+                $sql = "SELECT * FROM fa_history where `timestamp` < " . (strtotime("now") - 4800) ." ORDER BY times , RAND() LIMIT 1;";
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 $historyOne = $result[0];
 
