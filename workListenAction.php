@@ -152,11 +152,11 @@ switch ($type) {
             $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
             $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             if (!$result) {
-                $sql = "SELECT * FROM fa_history where `timestamp` < " . (strtotime("now") - 1800) ." ORDER BY RAND() LIMIT 1;";
+                $sql = "SELECT * FROM fa_history where `timestamp` < " . (strtotime("now") - 4800) ." ORDER BY RAND() LIMIT 1;";
                 $result = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 $historyOne = $result[0];
 
-                $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . "' WHERE  `id`=" . $historyOne['id'] . ";";
+                $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . " , `times` =  times + 1 ' WHERE  `id`=" . $historyOne['id'] . ";";
                 $result = $connection->exec($sql);
 
                 $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `timestamp`) VALUES ('" . $historyOne['id'] . "', '" . $historyOne['title'] . "','" . strtotime("now") . "');";
