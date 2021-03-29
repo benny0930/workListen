@@ -159,7 +159,7 @@ switch ($type) {
                 $sql = "UPDATE `fa_history` SET `timestamp`='" . strtotime("now") . "' , `times` =  times + 1  WHERE  `id`='" . $historyOne['id'] . "';";
                 $result = $connection->exec($sql);
 
-                $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `timestamp`) VALUES ('" . $historyOne['id'] . "', '" . $historyOne['title'] . "','" . strtotime("now") . "');";
+                $sql = "INSERT INTO `fa_broadcast` (`youtube_id`, `title`, `interstitial`, `timestamp`) VALUES ('" . $historyOne['id'] . "', '" . $historyOne['title'] . "','1','" . strtotime("now") . "');";
                 $result = $connection->exec($sql);
 
                 $historyOne['timestamp'] = strtotime("now");
