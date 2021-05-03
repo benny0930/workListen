@@ -151,7 +151,7 @@ function end() {
             if (videoType === -1) {
                 setTimeout(loadVideoByIdAfterError, 500);
             }
-            setTimeout(playVideo, 2000);
+            // setTimeout(playVideo, 2000);
             setTimeout(loadVideoById, 4000);
             setTimeout(checkVideoType, 8000);
         }
