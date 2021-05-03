@@ -104,8 +104,12 @@ function setChatroom(sHistory) {
             var speech = new SpeechSynthesisUtterance();
             speech.text = aChatroomSend[i];// 获取并设置说话时的文本
             createText(speech.text);
-            if (is_radio)
+            if (is_radio) {
                 speechSynthesis.speak(speech);
+            }
+            if (speech.text.split("說")[1] == "切歌") {
+                end();
+            }
         }
         aChatroomSend = [];
     }
