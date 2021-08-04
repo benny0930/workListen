@@ -172,11 +172,11 @@ switch ($type) {
         }
         $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
         $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        while (!$sDate1) {
-            $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
-            $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        }
-        
+//        while (!$sDate1) {
+//            $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+//            $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+//        }
+
         $sql = "SELECT * FROM fa_history order by timestamp desc ";
         $sDate2 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
