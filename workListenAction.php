@@ -141,12 +141,12 @@ switch ($type) {
             $sql = "SELECT * FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
             $result = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
 
+            $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
+            $result = $connection->exec($sql);
+
             $sql = "INSERT INTO `fa_history` (`id`, `title`, `timestamp`) 
                     VALUES ('" . $result['youtube_id'] . "', '" . $result['title'] . "', '" . $result['timestamp'] . "') 
                     ON DUPLICATE KEY UPDATE timestamp='" . $result['timestamp'] . "';";
-            $result = $connection->exec($sql);
-
-            $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
             $result = $connection->exec($sql);
 
             $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
@@ -172,7 +172,11 @@ switch ($type) {
         }
         $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
         $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
+        while (!$sDate1) {
+            $sql = "SELECT * FROM fa_broadcast order by interstitial desc , id asc";
+            $sDate1 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
         $sql = "SELECT * FROM fa_history order by timestamp desc ";
         $sDate2 = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
