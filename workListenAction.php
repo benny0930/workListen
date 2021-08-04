@@ -142,7 +142,7 @@ switch ($type) {
             $result = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
 
             $sql = "DELETE FROM `fa_broadcast` WHERE  `id`='" . $id . "';";
-            $result = $connection->exec($sql);
+            $del = $connection->exec($sql);
 
             $sql = "INSERT INTO `fa_history` (`id`, `title`, `timestamp`) 
                     VALUES ('" . $result['youtube_id'] . "', '" . $result['title'] . "', '" . $result['timestamp'] . "') 
