@@ -419,7 +419,7 @@ function onPlayerStateChange(event) {
         if (userName === "admin") {
             end();
         } else {
-            setTimeout(end, 3000);
+            setTimeout(end, 5000);
         }
     } else if (event.data === YT.PlayerState.PAUSED) {
     } else if (event.data === YT.PlayerState.PLAYING) {
