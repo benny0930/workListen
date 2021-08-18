@@ -311,20 +311,20 @@
             $("#div_online_user").hide();
         }
 
-        var aImages = [
-            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.180.1440.1440a/s640x640/156849548_877893289451156_7788529398325407524_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=108&_nc_ohc=jA2Qsp-Xj_0AX_ifQMu&oh=5c72fdb8dbb01bb5461b19b1d5482979&oe=607814AC',
-            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/160096652_815345335727764_1773984817380025631_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=104&_nc_ohc=xG7jXemlSdUAX-HzDNY&oh=5c9fd22450b137c5a91e211a9cd5aacc&oe=6079A44B',
-            'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/134252581_2889384648052577_783067974255837671_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=105&_nc_ohc=QUUr3HnCDpoAX_9drY-&oh=0132e39e3fe2f6c7659faee616d88d57&oe=6078CC15',
-            'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/132444749_196634048790694_8294525593193877986_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=110&_nc_ohc=UOjjw6xfoYwAX-FX_mw&oh=7e87ff27b52ba2c0d9197547b246ca91&oe=607B8E0E',
-            'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.108.1263.1263a/s320x320/119419401_2050081105124401_180860835831194261_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=LTRBL2wBcg0AX_Kc8UB&oh=62e2565a861ca146fbff4c17be0240b5&oe=6079B7AA',
-            '',
-            '',
-            '',
-        ];
-        for (var i = 0; i < aImages.length; i++) {
-            if (aImages[i] !== '')
-                $("#collapse_yua_mikami_body").append('<div class=\"col-12 box bg-cover\" style=\"background-image: url(' + aImages[i] + ')\"></div>');
-        }
+        // var aImages = [
+        //     'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.180.1440.1440a/s640x640/156849548_877893289451156_7788529398325407524_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=108&_nc_ohc=jA2Qsp-Xj_0AX_ifQMu&oh=5c72fdb8dbb01bb5461b19b1d5482979&oe=607814AC',
+        //     'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/160096652_815345335727764_1773984817380025631_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=104&_nc_ohc=xG7jXemlSdUAX-HzDNY&oh=5c9fd22450b137c5a91e211a9cd5aacc&oe=6079A44B',
+        //     'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/134252581_2889384648052577_783067974255837671_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=105&_nc_ohc=QUUr3HnCDpoAX_9drY-&oh=0132e39e3fe2f6c7659faee616d88d57&oe=6078CC15',
+        //     'https://instagram.fkhh1-2.fna.fbcdn.net/v/t51.2885-15/e35/c0.180.1440.1440a/s320x320/132444749_196634048790694_8294525593193877986_n.jpg?tp=1&_nc_ht=instagram.fkhh1-2.fna.fbcdn.net&_nc_cat=110&_nc_ohc=UOjjw6xfoYwAX-FX_mw&oh=7e87ff27b52ba2c0d9197547b246ca91&oe=607B8E0E',
+        //     'https://instagram.fkhh1-1.fna.fbcdn.net/v/t51.2885-15/e35/c0.108.1263.1263a/s320x320/119419401_2050081105124401_180860835831194261_n.jpg?tp=1&_nc_ht=instagram.fkhh1-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=LTRBL2wBcg0AX_Kc8UB&oh=62e2565a861ca146fbff4c17be0240b5&oe=6079B7AA',
+        //     '',
+        //     '',
+        //     '',
+        // ];
+        // for (var i = 0; i < aImages.length; i++) {
+        //     if (aImages[i] !== '')
+        //         $("#collapse_yua_mikami_body").append('<div class=\"col-12 box bg-cover\" style=\"background-image: url(' + aImages[i] + ')\"></div>');
+        // }
         $("#radioCheckBox").change(function () {
             is_radio = ($("#radioCheckBox:checked").length > 0);
         })

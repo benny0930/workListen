@@ -114,6 +114,12 @@ function setChatroom(sHistory) {
                     setTimeout(loadVideoById, 6000);
                 }
             }
+            if (speech.text.split("說")[1] == "+") {
+                player.setVolume(player.getVolume() + 5 );
+            }
+            if (speech.text.split("說")[1] == "-") {
+                player.setVolume(player.getVolume() - 5 );
+            }
         }
         aChatroomSend = [];
     }
