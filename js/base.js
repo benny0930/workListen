@@ -108,7 +108,11 @@ function setChatroom(sHistory) {
                 speechSynthesis.speak(speech);
             }
             if (speech.text.split("說")[1] == "切歌") {
-                end();
+                if (userName === "admin") {
+                    end();
+                } else {
+                    setTimeout(loadVideoById, 6000);
+                }
             }
         }
         aChatroomSend = [];
