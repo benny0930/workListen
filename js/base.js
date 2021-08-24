@@ -107,19 +107,19 @@ function setChatroom(sHistory) {
             if (is_radio) {
                 speechSynthesis.speak(speech);
             }
-            if (speech.text.split("說")[1] == "切歌") {
-                if (userName === "admin") {
-                    end();
-                } else {
-                    setTimeout(loadVideoById, 6000);
-                }
-            }
-            if (speech.text.split("說")[1] == "+") {
-                player.setVolume(player.getVolume() + 5 );
-            }
-            if (speech.text.split("說")[1] == "-") {
-                player.setVolume(player.getVolume() - 5 );
-            }
+            // if (speech.text.split("說")[1] == "切歌") {
+            //     if (userName === "admin") {
+            //         end();
+            //     } else {
+            //         setTimeout(loadVideoById, 6000);
+            //     }
+            // }
+            // if (speech.text.split("說")[1] == "+") {
+            //     player.setVolume(player.getVolume() + 5 );
+            // }
+            // if (speech.text.split("說")[1] == "-") {
+            //     player.setVolume(player.getVolume() - 5 );
+            // }
         }
         aChatroomSend = [];
     }
