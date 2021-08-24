@@ -104,13 +104,13 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <h5 class="card-header">
-                    即時廣播聊天室<br/>輸入「切歌」可以切歌
-                    <button class="btn btn-primary" type="button" data-toggle="collapse"
-                            data-target="#collapse_chatroom" aria-expanded="false"
-                            aria-controls="collapse_chatroom" style="float: right;">展開
-                    </button>
-                </h5>
+<!--                <h5 class="card-header">-->
+<!--                    即時廣播聊天室<br/>輸入「切歌」可以切歌-->
+<!--                    <button class="btn btn-primary" type="button" data-toggle="collapse"-->
+<!--                            data-target="#collapse_chatroom" aria-expanded="false"-->
+<!--                            aria-controls="collapse_chatroom" style="float: right;">展開-->
+<!--                    </button>-->
+<!--                </h5>-->
                 <div class="collapse" id="collapse_chatroom">
                     <div class="card-body">
                         <div class="input-group">
